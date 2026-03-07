@@ -3,6 +3,7 @@ using System;
 using HUDI.CoreX.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HUDI.CoreX.Migrations
 {
     [DbContext(typeof(CoreXDbContext))]
-    partial class CoreXDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260307045732_Added_MasterDataDictionary")]
+    partial class Added_MasterDataDictionary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

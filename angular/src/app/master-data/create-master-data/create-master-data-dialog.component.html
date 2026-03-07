@@ -1,0 +1,146 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'CreateMasterData' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="categoryCode">
+        {{ "CategoryCode" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          pInputText
+          type="text"
+          name="categoryCode"
+          id="categoryCode"
+          maxlength="50"
+          required
+          [(ngModel)]="item.categoryCode"
+          #categoryCodeModel="ngModel"
+          #categoryCodeEl
+          class="w-100"
+        />
+        <abp-validation-summary
+          [control]="categoryCodeModel"
+          [controlEl]="categoryCodeEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="code">
+        {{ "Code" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          pInputText
+          type="text"
+          name="code"
+          id="code"
+          maxlength="50"
+          required
+          [(ngModel)]="item.code"
+          #codeModel="ngModel"
+          #codeEl
+          class="w-100"
+        />
+        <abp-validation-summary
+          [control]="codeModel"
+          [controlEl]="codeEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="value">
+        {{ "Value" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          pInputText
+          type="text"
+          name="value"
+          id="value"
+          maxlength="255"
+          required
+          [(ngModel)]="item.value"
+          #valueModel="ngModel"
+          #valueEl
+          class="w-100"
+        />
+        <abp-validation-summary
+          [control]="valueModel"
+          [controlEl]="valueEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="displayValue">
+        {{ "DisplayValue" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          pInputText
+          type="text"
+          name="displayValue"
+          id="displayValue"
+          maxlength="500"
+          [(ngModel)]="item.displayValue"
+          class="w-100"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="sortOrder">
+        {{ "SortOrder" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          pInputText
+          type="number"
+          name="sortOrder"
+          id="sortOrder"
+          [(ngModel)]="item.sortOrder"
+          class="w-100"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="description">
+        {{ "Description" | localize }}
+      </label>
+      <div class="col-md-9">
+        <textarea
+          pInputText
+          name="description"
+          id="description"
+          rows="3"
+          [(ngModel)]="item.description"
+          class="w-100"
+        ></textarea>
+      </div>
+    </div>
+    <div class="form-group row mb-0">
+      <label class="col-md-3 col-form-label">
+        {{ "IsActive" | localize }}
+      </label>
+      <div class="col-md-9 d-flex align-items-center">
+        <p-checkbox
+          name="isActive"
+          [(ngModel)]="item.isActive"
+          [binary]="true"
+          inputId="isActive"
+        ></p-checkbox>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

@@ -39,6 +39,12 @@ import { AppComponent } from './app.component';
                         canActivate: [AppRouteGuard]
                     },
                     {
+                        path: 'master-data',
+                        loadChildren: () => import('./master-data/master-data.module').then((m) => m.MasterDataModule),
+                        data: { permission: 'Pages.MasterData' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
                         path: 'update-password',
                         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
                         canActivate: [AppRouteGuard]
