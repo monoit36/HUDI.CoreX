@@ -1,4 +1,4 @@
-﻿using Abp.Localization;
+using Abp.Localization;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Runtime.Security;
@@ -37,6 +37,7 @@ namespace HUDI.CoreX
             Configuration.Settings.Providers.Add<AppSettingProvider>();
             
             Configuration.Localization.Languages.Add(new LanguageInfo("fa", "فارسی", "famfamfam-flags ir"));
+            Configuration.Localization.Languages.Add(new LanguageInfo("vi", "Tiếng Việt", "famfamfam-flags vn"));
             
             Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = CoreXConsts.DefaultPassPhrase;
             SimpleStringCipher.DefaultPassPhrase = CoreXConsts.DefaultPassPhrase;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
     <text name="HomePage" value="Home page" />
@@ -120,5 +120,22 @@
     <text name="403PageHeader">Forbidden</text>
     <text name="403PageDescription">You don't have permission to access this resource. Please contact your administrator.</text>
     <text name="403PageButton">Go back to Dashboard</text>
+    <!-- Permission Tree -->
+    <text name="Pages">Pages</text>
+    <text name="MasterData">Master Data</text>
+    <text name="MasterDataDictionary">Master Data Dictionary</text>
+    <text name="MasterDataDeleteWarningMessage">Master data '{0}' will be deleted.</text>
+    <!-- Master Data Labels -->
+    <text name="CategoryCode">Category Code</text>
+    <text name="Code">Code</text>
+    <text name="Value">Value</text>
+    <text name="DisplayValue">Display Value</text>
+    <text name="SortOrder">Sort Order</text>
+    <text name="Description">Description</text>
+    <text name="Records">records</text>
+    <text name="NoData">No data</text>
+    <text name="Details">Details</text>
+    <text name="CreateMasterData">Create Master Data</text>
+    <text name="EditMasterData">Edit Master Data</text>
   </texts>
 </localizationDictionary>

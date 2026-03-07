@@ -12,6 +12,7 @@
             <span class="ml-1">{{ totalItems }} {{ "Records" | localize }}</span>
           </span>
           <p-button
+            *ngIf="isGranted('Pages.MasterData.Dictionary.Create')"
             icon="pi pi-plus"
             [rounded]="true"
             size="small"

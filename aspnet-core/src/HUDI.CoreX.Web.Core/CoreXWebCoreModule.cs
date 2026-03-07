@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,8 +19,9 @@ namespace HUDI.CoreX
     [DependsOn(
          typeof(CoreXApplicationModule),
          typeof(CoreXEntityFrameworkModule),
-         typeof(AbpAspNetCoreModule)
-        ,typeof(AbpAspNetCoreSignalRModule)
+         typeof(AbpAspNetCoreModule),
+         typeof(AbpAspNetCoreSignalRModule),
+         typeof(CoreXMasterModule)
      )]
     public class CoreXWebCoreModule : AbpModule
     {
@@ -45,6 +46,11 @@ namespace HUDI.CoreX
             Configuration.Modules.AbpAspNetCore()
                  .CreateControllersForAppServices(
                      typeof(CoreXApplicationModule).GetAssembly()
+                 );
+
+            Configuration.Modules.AbpAspNetCore()
+                 .CreateControllersForAppServices(
+                     typeof(CoreXMasterModule).GetAssembly()
                  );
 
             ConfigureTokenAuth();

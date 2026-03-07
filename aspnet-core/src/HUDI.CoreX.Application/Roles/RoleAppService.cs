@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
@@ -8,6 +8,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.Linq.Extensions;
+using Abp.Localization;
 using HUDI.CoreX.Authorization;
 using HUDI.CoreX.Authorization.Roles;
 using HUDI.CoreX.Authorization.Users;
@@ -154,7 +155,7 @@ namespace HUDI.CoreX.Roles
                 .Select(p => new PermissionTreeDto
                 {
                     Name = p.Name,
-                    DisplayName = p.DisplayName.GetRawString(),
+                    DisplayName = p.DisplayName.Localize(LocalizationManager),
                     Children = GetChildPermissions(p.Name, permissions.Where(p => p.Parent != null))
                 })
                 .ToList();
@@ -169,7 +170,7 @@ namespace HUDI.CoreX.Roles
                 .Select(p => new PermissionTreeDto
                 {
                     Name = p.Name,
-                    DisplayName = p.DisplayName.GetRawString(),
+                    DisplayName = p.DisplayName.Localize(LocalizationManager),
                     Children = GetChildPermissions(p.Name, allPermissions)
                 })
                 .ToList();

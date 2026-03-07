@@ -23,19 +23,19 @@ import { AppComponent } from './app.component';
                     {
                         path: 'users',
                         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
-                        data: { permission: 'Pages.Users' },
+                        data: { permission: 'Pages.Administration.Users' },
                         canActivate: [AppRouteGuard]
                     },
                     {
                         path: 'roles',
                         loadChildren: () => import('./roles/roles.module').then((m) => m.RolesModule),
-                        data: { permission: 'Pages.Roles' },
+                        data: { permission: 'Pages.Administration.Roles' },
                         canActivate: [AppRouteGuard]
                     },
                     {
                         path: 'tenants',
                         loadChildren: () => import('./tenants/tenants.module').then((m) => m.TenantsModule),
-                        data: { permission: 'Pages.Tenants' },
+                        data: { permission: 'Pages.Administration.Tenants' },
                         canActivate: [AppRouteGuard]
                     },
                     {

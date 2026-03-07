@@ -62,7 +62,7 @@ export class EditUserDialogComponent extends AppComponentBase
   }
 
   onRoleChange(role: RoleDto, $event) {
-    this.checkedRolesMap[role.normalizedName] = $event.target.checked;
+    this.checkedRolesMap[role.normalizedName] = $event.checked;
   }
 
   getCheckedRoles(): string[] {

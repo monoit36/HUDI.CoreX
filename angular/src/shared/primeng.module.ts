@@ -21,6 +21,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { MenuModule } from 'primeng/menu';
+import { TreeModule } from 'primeng/tree';
 
 const PRIMENG_MODULES = [
   ButtonModule,
@@ -42,7 +43,8 @@ const PRIMENG_MODULES = [
   InputGroupAddonModule,
   PasswordModule,
   TooltipModule,
-  MenuModule
+  MenuModule,
+  TreeModule
 ];
 
 @NgModule({

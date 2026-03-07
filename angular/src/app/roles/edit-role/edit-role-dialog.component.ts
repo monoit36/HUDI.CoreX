@@ -7,16 +7,17 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { forEach as _forEach, includes as _includes, map as _map } from 'lodash-es';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   RoleServiceProxy,
   GetRoleForEditOutput,
   RoleDto,
-  PermissionDto,
   RoleEditDto,
-  FlatPermissionDto
+  PermissionTreeDto,
+  PermissionTreeDtoTreeResultDto
 } from '@shared/service-proxies/service-proxies';
+import { TreeNode } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 
 @Component({
   templateUrl: 'edit-role-dialog.component.html'
@@ -26,9 +27,9 @@ export class EditRoleDialogComponent extends AppComponentBase
   saving = false;
   id: number;
   role = new RoleEditDto();
-  permissions: FlatPermissionDto[];
-  grantedPermissionNames: string[];
-  checkedPermissionsMap: { [key: string]: boolean } = {};
+  permissionNodes: TreeNode[] = [];
+  selectedPermissions: TreeNode[] = [];
+  grantedPermissionNames: string[] = [];
 
   @Output() onSave = new EventEmitter<any>();
 
@@ -42,41 +43,87 @@ export class EditRoleDialogComponent extends AppComponentBase
   }
 
   ngOnInit(): void {
-    this._roleService
-      .getRoleForEdit(this.id)
-      .subscribe((result: GetRoleForEditOutput) => {
-        this.role = result.role;
-        this.permissions = result.permissions;
-        this.grantedPermissionNames = result.grantedPermissionNames;
-        this.setInitialPermissionsStatus();
-        this.cd.detectChanges();
-      });
-  }
-
-  setInitialPermissionsStatus(): void {
-    _map(this.permissions, (item) => {
-      this.checkedPermissionsMap[item.name] = this.isPermissionChecked(
-        item.name
-      );
+    forkJoin([
+      this._roleService.getRoleForEdit(this.id),
+      this._roleService.getPermissionTree()
+    ]).subscribe(([editResult, treeResult]: [GetRoleForEditOutput, PermissionTreeDtoTreeResultDto]) => {
+      this.role = editResult.role;
+      this.grantedPermissionNames = editResult.grantedPermissionNames;
+      this.permissionNodes = this.mapToTreeNodes(treeResult.items);
+      this.selectedPermissions = this.getSelectedNodes(this.permissionNodes, this.grantedPermissionNames);
+      this.cd.detectChanges();
     });
   }
 
-  isPermissionChecked(permissionName: string): boolean {
-    return _includes(this.grantedPermissionNames, permissionName);
+  private mapToTreeNodes(permissions: PermissionTreeDto[]): TreeNode[] {
+    if (!permissions) return [];
+    return permissions.map(p => ({
+      label: p.displayName,
+      data: p.name,
+      key: p.name,
+      children: this.mapToTreeNodes(p.children),
+      expanded: true
+    }));
   }
 
-  onPermissionChange(permission: FlatPermissionDto, $event) {
-    this.checkedPermissionsMap[permission.name] = $event.target.checked;
+  private getSelectedNodes(nodes: TreeNode[], grantedNames: string[]): TreeNode[] {
+    let selected: TreeNode[] = [];
+    for (const node of nodes) {
+      if (node.children && node.children.length > 0) {
+        const childSelected = this.getSelectedNodes(node.children, grantedNames);
+        selected = selected.concat(childSelected);
+        // Only add parent to selection if ALL children are selected (fully checked)
+        const allLeaves = this.getAllLeafNodes(node.children);
+        const selectedLeaves = allLeaves.filter(l => grantedNames.includes(l.data));
+        if (selectedLeaves.length === allLeaves.length) {
+          selected.push(node);
+        }
+      } else {
+        if (grantedNames.includes(node.data)) {
+          selected.push(node);
+        }
+      }
+    }
+    return selected;
+  }
+
+  private getAllLeafNodes(nodes: TreeNode[]): TreeNode[] {
+    let result: TreeNode[] = [];
+    for (const node of nodes) {
+      if (node.children && node.children.length > 0) {
+        result = result.concat(this.getAllLeafNodes(node.children));
+      } else {
+        result.push(node);
+      }
+    }
+    return result;
   }
 
   getCheckedPermissions(): string[] {
     const permissions: string[] = [];
-    _forEach(this.checkedPermissionsMap, function (value, key) {
-      if (value) {
-        permissions.push(key);
+
+    // Include fully selected nodes
+    for (const node of this.selectedPermissions) {
+      if (node.data) {
+        permissions.push(node.data);
       }
-    });
-    return permissions;
+    }
+
+    // Include partially selected parent nodes
+    this.collectPartiallySelected(this.permissionNodes, permissions);
+
+    return [...new Set(permissions)];
+  }
+
+  private collectPartiallySelected(nodes: TreeNode[], permissions: string[]): void {
+    for (const node of nodes) {
+      if (node.partialSelected && node.data) {
+        permissions.push(node.data);
+      }
+      if (node.children) {
+        this.collectPartiallySelected(node.children, permissions);
+      }
+    }
   }
 
   save(): void {

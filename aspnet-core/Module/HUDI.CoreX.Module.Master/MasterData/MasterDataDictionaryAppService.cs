@@ -11,7 +11,7 @@ using HUDI.CoreX.MasterData.Dto;
 
 namespace HUDI.CoreX.MasterData
 {
-    [AbpAuthorize(PermissionNames.Pages_MasterData)]
+    [AbpAuthorize(MasterPermissionNames.Pages_MasterData)]
     public class MasterDataDictionaryAppService
         : AsyncCrudAppService<MasterDataDictionary, MasterDataDictionaryDto, int, PagedMasterDataDictionaryResultRequestDto, CreateMasterDataDictionaryDto, UpdateMasterDataDictionaryDto>,
           IMasterDataDictionaryAppService
@@ -19,6 +19,11 @@ namespace HUDI.CoreX.MasterData
         public MasterDataDictionaryAppService(IRepository<MasterDataDictionary, int> repository)
             : base(repository)
         {
+            GetPermissionName = MasterPermissionNames.Pages_MasterData_Dictionary;
+            GetAllPermissionName = MasterPermissionNames.Pages_MasterData_Dictionary;
+            CreatePermissionName = MasterPermissionNames.Pages_MasterData_Dictionary_Create;
+            UpdatePermissionName = MasterPermissionNames.Pages_MasterData_Dictionary_Edit;
+            DeletePermissionName = MasterPermissionNames.Pages_MasterData_Dictionary_Delete;
         }
 
         protected override IQueryable<MasterDataDictionary> CreateFilteredQuery(PagedMasterDataDictionaryResultRequestDto input)

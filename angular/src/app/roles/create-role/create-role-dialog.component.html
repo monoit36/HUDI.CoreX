@@ -76,19 +76,15 @@
         </div>
       </p-tabPanel>
       <p-tabPanel [header]="'Permissions' | localize">
-        <div class="form-group row mb-0 mt-3">
-          @for (permission of permissions; track permission; let i = $index) {
-            <div class="col-md-6 mb-2">
-              <p-checkbox
-                [label]="permission.displayName"
-                [binary]="true"
-                [ngModel]="isPermissionChecked(permission.name)"
-                (onChange)="onPermissionChange(permission, $event)"
-                [name]="'permission_' + i"
-                [inputId]="'permission_' + i"
-              ></p-checkbox>
-            </div>
-          }
+        <div class="mt-3">
+          <p-tree
+            [value]="permissionNodes"
+            selectionMode="checkbox"
+            [(selection)]="selectedPermissions"
+            [propagateSelectionUp]="true"
+            [propagateSelectionDown]="true"
+            [style]="{'width': '100%'}"
+          ></p-tree>
         </div>
       </p-tabPanel>
     </p-tabView>

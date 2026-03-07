@@ -56,12 +56,14 @@ export class MasterDataComponent extends PagedListingComponentBase<MasterDataDic
       {
         label: this.l('Edit'),
         icon: 'pi pi-pencil',
-        command: () => this.editItem(item)
+        command: () => this.editItem(item),
+        visible: this.isGranted('Pages.MasterData.Dictionary.Edit')
       },
       {
         label: this.l('Delete'),
         icon: 'pi pi-trash',
-        command: () => this.delete(item)
+        command: () => this.delete(item),
+        visible: this.isGranted('Pages.MasterData.Dictionary.Delete')
       }
     ];
     this.actionMenu.toggle(event);

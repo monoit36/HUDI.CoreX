@@ -11,11 +11,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   RoleServiceProxy,
   RoleDto,
-  PermissionDto,
   CreateRoleDto,
-  PermissionDtoListResultDto
+  PermissionTreeDto,
+  PermissionTreeDtoTreeResultDto
 } from '@shared/service-proxies/service-proxies';
-import { forEach as _forEach, map as _map } from 'lodash-es';
+import { TreeNode } from 'primeng/api';
 
 @Component({
   templateUrl: 'create-role-dialog.component.html'
@@ -24,9 +24,8 @@ export class CreateRoleDialogComponent extends AppComponentBase
   implements OnInit {
   saving = false;
   role = new RoleDto();
-  permissions: PermissionDto[] = [];
-  checkedPermissionsMap: { [key: string]: boolean } = {};
-  defaultPermissionCheckedStatus = true;
+  permissionNodes: TreeNode[] = [];
+  selectedPermissions: TreeNode[] = [];
 
   onSave = output<EventEmitter<any>>()
 
@@ -41,40 +40,62 @@ export class CreateRoleDialogComponent extends AppComponentBase
 
   ngOnInit(): void {
     this._roleService
-      .getAllPermissions()
-      .subscribe((result: PermissionDtoListResultDto) => {
-        this.permissions = result.items;
-        this.setInitialPermissionsStatus();
+      .getPermissionTree()
+      .subscribe((result: PermissionTreeDtoTreeResultDto) => {
+        this.permissionNodes = this.mapToTreeNodes(result.items);
+        // Default: select all
+        this.selectedPermissions = this.getAllTreeNodes(this.permissionNodes);
         this.cd.detectChanges();
       });
   }
 
-  setInitialPermissionsStatus(): void {
-    _map(this.permissions, (item) => {
-      this.checkedPermissionsMap[item.name] = this.isPermissionChecked(
-        item.name
-      );
-    });
+  private mapToTreeNodes(permissions: PermissionTreeDto[]): TreeNode[] {
+    if (!permissions) return [];
+    return permissions.map(p => ({
+      label: p.displayName,
+      data: p.name,
+      key: p.name,
+      children: this.mapToTreeNodes(p.children),
+      expanded: true
+    }));
   }
 
-  isPermissionChecked(permissionName: string): boolean {
-    // just return default permission checked status
-    // it's better to use a setting
-    return this.defaultPermissionCheckedStatus;
-  }
-
-  onPermissionChange(permission: PermissionDto, $event) {
-    this.checkedPermissionsMap[permission.name] = $event.target.checked;
+  private getAllTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    let result: TreeNode[] = [];
+    for (const node of nodes) {
+      result.push(node);
+      if (node.children) {
+        result = result.concat(this.getAllTreeNodes(node.children));
+      }
+    }
+    return result;
   }
 
   getCheckedPermissions(): string[] {
     const permissions: string[] = [];
-    _forEach(this.checkedPermissionsMap, function (value, key) {
-      if (value) {
-        permissions.push(key);
+
+    // Include fully selected nodes
+    for (const node of this.selectedPermissions) {
+      if (node.data) {
+        permissions.push(node.data);
       }
-    });
-    return permissions;
+    }
+
+    // Include partially selected parent nodes
+    this.collectPartiallySelected(this.permissionNodes, permissions);
+
+    return [...new Set(permissions)];
+  }
+
+  private collectPartiallySelected(nodes: TreeNode[], permissions: string[]): void {
+    for (const node of nodes) {
+      if (node.partialSelected && node.data) {
+        permissions.push(node.data);
+      }
+      if (node.children) {
+        this.collectPartiallySelected(node.children, permissions);
+      }
+    }
   }
 
   save(): void {
