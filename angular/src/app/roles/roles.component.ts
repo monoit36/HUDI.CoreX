@@ -1,4 +1,4 @@
-import { Component, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, Injector, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -13,6 +13,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { CreateRoleDialogComponent } from './create-role/create-role-dialog.component';
 import { EditRoleDialogComponent } from './edit-role/edit-role-dialog.component';
+import { Menu } from 'primeng/menu';
 
 class PagedRolesRequestDto extends PagedRequestDto {
   keyword: string;
@@ -20,9 +21,11 @@ class PagedRolesRequestDto extends PagedRequestDto {
 
 @Component({
   templateUrl: './roles.component.html',
+  styleUrls: ['../../shared/styles/list-page.css'],
   animations: [appModuleAnimation()]
 })
 export class RolesComponent extends PagedListingComponentBase<RoleDto> {
+  @ViewChild('actionMenu') override actionMenu: Menu;
   roles: RoleDto[] = [];
   keyword = '';
 
@@ -33,6 +36,30 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
+  }
+
+  createRole(): void {
+    this.showCreateOrEditRoleDialog();
+  }
+
+  editRole(role: RoleDto): void {
+    this.showCreateOrEditRoleDialog(role.id);
+  }
+
+  toggleActionMenu(event: Event, role: RoleDto): void {
+    this.actionMenuItems = [
+      {
+        label: this.l('Edit'),
+        icon: 'pi pi-pencil',
+        command: () => this.editRole(role)
+      },
+      {
+        label: this.l('Delete'),
+        icon: 'pi pi-trash',
+        command: () => this.delete(role)
+      }
+    ];
+    this.actionMenu.toggle(event);
   }
 
   list(
@@ -74,14 +101,6 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
         }
       }
     );
-  }
-
-  createRole(): void {
-    this.showCreateOrEditRoleDialog();
-  }
-
-  editRole(role: RoleDto): void {
-    this.showCreateOrEditRoleDialog(role.id);
   }
 
   showCreateOrEditRoleDialog(id?: number): void {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -13,6 +13,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { CreateTenantDialogComponent } from './create-tenant/create-tenant-dialog.component';
 import { EditTenantDialogComponent } from './edit-tenant/edit-tenant-dialog.component';
+import { Menu } from 'primeng/menu';
 
 class PagedTenantsRequestDto extends PagedRequestDto {
   keyword: string;
@@ -21,9 +22,11 @@ class PagedTenantsRequestDto extends PagedRequestDto {
 
 @Component({
   templateUrl: './tenants.component.html',
+  styleUrls: ['../../shared/styles/list-page.css'],
   animations: [appModuleAnimation()]
 })
 export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
+  @ViewChild('actionMenu') override actionMenu: Menu;
   tenants: TenantDto[] = [];
   keyword = '';
   isActive: boolean | null;
@@ -36,6 +39,36 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
+  }
+
+  createTenant(): void {
+    this.showCreateOrEditTenantDialog();
+  }
+
+  editTenant(tenant: TenantDto): void {
+    this.showCreateOrEditTenantDialog(tenant.id);
+  }
+
+  toggleActionMenu(event: Event, tenant: TenantDto): void {
+    this.actionMenuItems = [
+      {
+        label: this.l('Edit'),
+        icon: 'pi pi-pencil',
+        command: () => this.editTenant(tenant)
+      },
+      {
+        label: this.l('Delete'),
+        icon: 'pi pi-trash',
+        command: () => this.delete(tenant)
+      }
+    ];
+    this.actionMenu.toggle(event);
+  }
+
+  clearFilters(): void {
+    this.keyword = '';
+    this.isActive = undefined;
+    this.getDataPage(1);
   }
 
   list(
@@ -84,14 +117,6 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
     );
   }
 
-  createTenant(): void {
-    this.showCreateOrEditTenantDialog();
-  }
-
-  editTenant(tenant: TenantDto): void {
-    this.showCreateOrEditTenantDialog(tenant.id);
-  }
-
   showCreateOrEditTenantDialog(id?: number): void {
     let createOrEditTenantDialog: BsModalRef;
     if (!id) {
@@ -116,11 +141,5 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
     createOrEditTenantDialog.content.onSave.subscribe(() => {
       this.refresh();
     });
-  }
-
-  clearFilters(): void {
-    this.keyword = '';
-    this.isActive = undefined;
-    this.getDataPage(1);
   }
 }

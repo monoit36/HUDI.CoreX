@@ -1,4 +1,4 @@
-﻿<div [@routerTransition]>
+<div [@routerTransition]>
   <section class="content-header">
     <div class="container-fluid">
       <div class="row">
@@ -149,9 +149,13 @@
             <div class="card-header">
               <h3 class="card-title">Open Issues</h3>
             </div>
-            <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap">
-                <thead class="bg-light">
+            <div class="card-body p-0">
+              <p-table [value]="[
+                { id: 5452, url: 'https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5452', title: 'Angular UI migration to AdminLTE 3', labels: [{name: 'module-zero-core-template', severity: 'secondary'}, {name: 'feature', severity: 'info'}], date: '11 days ago', openedBy: 'iyilm4z' },
+                { id: 5391, url: 'https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5391', title: 'AbpCacheBase should lock the same object for sync and async', labels: [{name: 'bug', severity: 'danger'}, {name: 'pull request candidate', severity: 'success'}], date: '26 days ago', openedBy: 'acjh' },
+                { id: 5390, url: 'https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5390', title: 'AbpCache sliding/absolute expire time', labels: [{name: 'breaking-change', severity: 'warning'}, {name: 'enhancement', severity: 'info'}], date: '27 days ago', openedBy: 'ryancyq' }
+              ]" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
                   <tr>
                     <th>Id</th>
                     <th class="w-25">Title</th>
@@ -159,68 +163,23 @@
                     <th>Date</th>
                     <th>Opened by</th>
                   </tr>
-                </thead>
-                <tbody>
+                </ng-template>
+                <ng-template pTemplate="body" let-issue>
                   <tr>
                     <td>
-                      <a href="https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5452"
-                        target="_blank">
-                        5452
-                      </a>
+                      <a [href]="issue.url" target="_blank">{{ issue.id }}</a>
                     </td>
-                    <td>Angular UI migration to AdminLTE 3</td>
+                    <td>{{ issue.title }}</td>
                     <td>
-                      <span class="badge badge-secondary mx-1">
-                        module-zero-core-template
-                      </span>
-                      <span class="badge badge-primary mx-1">
-                        feature
-                      </span>
+                      @for (label of issue.labels; track label.name) {
+                        <p-tag [value]="label.name" [severity]="label.severity" class="mr-1"></p-tag>
+                      }
                     </td>
-                    <td>11 days ago</td>
-                    <td>iyilm4z</td>
+                    <td>{{ issue.date }}</td>
+                    <td>{{ issue.openedBy }}</td>
                   </tr>
-                  <tr>
-                    <td>
-                      <a href="https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5391"
-                        target="_blank">
-                        5391
-                      </a>
-                    </td>
-                    <td>
-                      AbpCacheBase should lock the same object for sync and
-                      async
-                    </td>
-                    <td>
-                      <span class="badge badge-danger mx-1">
-                        bug
-                      </span>
-                      <span class="badge badge-success mx-1">
-                        pull request candidate
-                      </span>
-                    </td>
-                    <td>26 days ago</td>
-                    <td>acjh</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a href="https://github.com/aspnetboilerplate/aspnetboilerplate/issues/5390"
-                        target="_blank">
-                        5390
-                      </a>
-                    </td>
-                    <td>AbpCache sliding/absolute expire time</td>
-                    <td>
-                      <span class="badge badge-warning mx-1">
-                        breaking-change
-                      </span>
-                      <span class="badge badge-info mx-1">enhancement</span>
-                    </td>
-                    <td>27 days ago</td>
-                    <td>ryancyq</td>
-                  </tr>
-                </tbody>
-              </table>
+                </ng-template>
+              </p-table>
             </div>
           </div>
         </div>
@@ -231,9 +190,13 @@
             <div class="card-header">
               <h3 class="card-title">Closed Pull Requests</h3>
             </div>
-            <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap">
-                <thead class="bg-light">
+            <div class="card-body p-0">
+              <p-table [value]="[
+                { id: 5430, url: 'https://github.com/aspnetboilerplate/aspnetboilerplate/pull/5430', title: 'Added Dynamic-Parameter-System doc to documentation menu', milestone: 'v5.6', date: '18 days ago', madeBy: 'maliming' },
+                { id: 5362, url: 'https://github.com/aspnetboilerplate/aspnetboilerplate/pull/5362', title: 'Dynamic Parameter Module', milestone: 'v5.4', date: '25 days ago', madeBy: 'demirmusa' },
+                { id: 4924, url: 'https://github.com/aspnetboilerplate/aspnetboilerplate/pull/4924', title: 'ASP.NET Core 3.0 Upgrade', milestone: 'v5.0', date: 'Oct 15', madeBy: 'ismcagdas' }
+              ]" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
                   <tr>
                     <th>Id</th>
                     <th class="w-25">Title</th>
@@ -241,52 +204,19 @@
                     <th>Date</th>
                     <th>Made by</th>
                   </tr>
-                </thead>
-                <tbody>
+                </ng-template>
+                <ng-template pTemplate="body" let-pr>
                   <tr>
                     <td>
-                      <a href="https://github.com/aspnetboilerplate/aspnetboilerplate/pull/5430"
-                        target="_blank">
-                        5430
-                      </a>
+                      <a [href]="pr.url" target="_blank">{{ pr.id }}</a>
                     </td>
-                    <td>
-                      Added Dynamic-Parameter-System doc to documentation menu
-                    </td>
-                    <td>v5.6</td>
-                    <td>18 days ago</td>
-                    <td>maliming</td>
+                    <td>{{ pr.title }}</td>
+                    <td>{{ pr.milestone }}</td>
+                    <td>{{ pr.date }}</td>
+                    <td>{{ pr.madeBy }}</td>
                   </tr>
-                  <tr>
-                    <td>
-                      <a href="https://github.com/aspnetboilerplate/aspnetboilerplate/pull/5362"
-                        target="_blank">
-                        5362
-                      </a>
-                    </td>
-                    <td>
-                      Dynamic Parameter Module
-                    </td>
-                    <td>v5.4</td>
-                    <td>25 days ago</td>
-                    <td>demirmusa</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a href="https://github.com/aspnetboilerplate/aspnetboilerplate/pull/4924"
-                        target="_blank">
-                        4924
-                      </a>
-                    </td>
-                    <td>
-                      ASP.NET Core 3.0 Upgrade
-                    </td>
-                    <td>v5.0</td>
-                    <td>Oct 15</td>
-                    <td>ismcagdas</td>
-                  </tr>
-                </tbody>
-              </table>
+                </ng-template>
+              </p-table>
             </div>
           </div>
         </div>

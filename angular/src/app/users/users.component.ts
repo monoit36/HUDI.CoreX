@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -14,6 +14,7 @@ import {
 import { CreateUserDialogComponent } from './create-user/create-user-dialog.component';
 import { EditUserDialogComponent } from './edit-user/edit-user-dialog.component';
 import { ResetPasswordDialogComponent } from './reset-password/reset-password.component';
+import { Menu } from 'primeng/menu';
 
 class PagedUsersRequestDto extends PagedRequestDto {
   keyword: string;
@@ -22,9 +23,11 @@ class PagedUsersRequestDto extends PagedRequestDto {
 
 @Component({
   templateUrl: './users.component.html',
+  styleUrls: ['../../shared/styles/list-page.css'],
   animations: [appModuleAnimation()]
 })
 export class UsersComponent extends PagedListingComponentBase<UserDto> {
+  @ViewChild('actionMenu') override actionMenu: Menu;
   users: UserDto[] = [];
   keyword = '';
   isActive: boolean | null;
@@ -49,6 +52,30 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
 
   public resetPassword(user: UserDto): void {
     this.showResetPasswordUserDialog(user.id);
+  }
+
+  toggleActionMenu(event: Event, user: UserDto): void {
+    this.actionMenuItems = [
+      {
+        label: this.l('Edit'),
+        icon: 'pi pi-pencil',
+        command: () => this.editUser(user)
+      },
+      {
+        label: this.l('Delete'),
+        icon: 'pi pi-trash',
+        command: () => this.delete(user)
+      },
+      {
+        separator: true
+      },
+      {
+        label: this.l('ResetPassword'),
+        icon: 'pi pi-lock',
+        command: () => this.resetPassword(user)
+      }
+    ];
+    this.actionMenu.toggle(event);
   }
 
   clearFilters(): void {

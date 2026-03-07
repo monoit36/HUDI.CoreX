@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-// PrimeNG Components - thêm dần khi cần
+// PrimeNG Components
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -14,6 +14,13 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaginatorModule } from 'primeng/paginator';
+import { TabViewModule } from 'primeng/tabview';
+import { TagModule } from 'primeng/tag';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { PasswordModule } from 'primeng/password';
+import { TooltipModule } from 'primeng/tooltip';
+import { MenuModule } from 'primeng/menu';
 
 const PRIMENG_MODULES = [
   ButtonModule,
@@ -28,7 +35,14 @@ const PRIMENG_MODULES = [
   InputTextareaModule,
   ToolbarModule,
   ConfirmDialogModule,
-  PaginatorModule
+  PaginatorModule,
+  TabViewModule,
+  TagModule,
+  InputGroupModule,
+  InputGroupAddonModule,
+  PasswordModule,
+  TooltipModule,
+  MenuModule
 ];
 
 @NgModule({

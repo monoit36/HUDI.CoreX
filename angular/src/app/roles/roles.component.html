@@ -1,115 +1,143 @@
 <div [@routerTransition]>
   <section class="content-header">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-6">
-          <h1>{{ "Roles" | localize }}</h1>
+      <div class="row align-items-center">
+        <div class="col">
+          <h1 class="mb-0" style="font-size: 1.5rem; font-weight: 600;">{{ "Roles" | localize }}</h1>
+          <small class="text-muted">{{ "TotalRecordsCount" | localize: totalItems }}</small>
         </div>
-        <div class="col-6 text-right">
-          <a href="javascript:;"
-            class="btn bg-blue"
-            (click)="createRole()">
-            <i class="fa fa-plus-square"></i>
-            {{ "Create" | localize }}
-          </a>
+        <div class="col-auto d-flex align-items-center">
+          <span class="badge-count mr-3">
+            <i class="pi pi-circle-fill text-success" style="font-size: 0.5rem; vertical-align: middle;"></i>
+            <span class="ml-1">{{ totalItems }} {{ "Roles" | localize }}</span>
+          </span>
+          <p-button
+            icon="pi pi-plus"
+            [rounded]="true"
+            size="small"
+            (onClick)="createRole()"
+            pTooltip="Create"
+            tooltipPosition="bottom"
+          ></p-button>
         </div>
       </div>
     </div>
   </section>
   <section class="content px-2">
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-md-6">&emsp;</div>
-            <div class="col-md-6">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <button type="button"
-                    class="btn bg-blue"
-                    (click)="getDataPage(1)">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-                <input type="text"
-                  class="form-control"
-                  name="keyword"
-                  [placeholder]="'SearchWithThreeDot' | localize"
-                  [(ngModel)]="keyword"
-                  (keyup.enter)="getDataPage(1)" />
-                </div>
-              </div>
+      <div class="card card-list-page">
+        <!-- Toolbar: Search left, Actions right -->
+        <div class="card-header border-bottom" style="background: #fff;">
+          <div class="d-flex align-items-center justify-content-between flex-wrap">
+            <!-- Search -->
+            <div class="search-input-wrapper">
+              <i class="pi pi-search search-icon"></i>
+              <input
+                pInputText
+                type="text"
+                name="keyword"
+                [placeholder]="'Search' | localize"
+                [(ngModel)]="keyword"
+                (keyup.enter)="getDataPage(1)"
+                class="search-input"
+              />
             </div>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-striped table-bordered"
-                [busy]="isTableLoading">
-                <thead class="bg-light">
-                  <tr>
-                    <th>{{ "RoleName" | localize }}</th>
-                    <th>{{ "DisplayName" | localize }}</th>
-                    <th style="width: 200px;">{{ "Actions" | localize }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (
-                    role of roles
-                    | paginate
-                    : {
-                    id: 'server',
-                    itemsPerPage: pageSize,
-                    currentPage: pageNumber,
-                    totalItems: totalItems
-                  }
-                  ; track
-                  role.id) {
-                  <tr>
-                    <td>{{ role.name }}</td>
-                    <td>{{ role.displayName }}</td>
-                    <td>
-                      <button type="button"
-                        class="btn btn-sm bg-secondary"
-                        (click)="editRole(role)">
-                        <i class="fas fa-pencil-alt"></i>
-                        {{ "Edit" | localize }}
-                      </button>
-                      <button type="button"
-                        class="btn btn-sm bg-danger mx-2"
-                        (click)="delete(role)">
-                        <i class="fas fa-trash"></i>
-                        {{ "Delete" | localize }}
-                      </button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+            <!-- Right actions -->
+            <div class="d-flex align-items-center">
+              <p-button
+                icon="pi pi-refresh"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                size="small"
+                (onClick)="refresh()"
+                pTooltip="Refresh"
+                tooltipPosition="bottom"
+                class="mr-2"
+              ></p-button>
+              <span class="pagination-info mr-2" style="white-space: nowrap; color: #666;">
+                {{ pageNumber }} of {{ totalPages }}
+              </span>
+              <p-button
+                icon="pi pi-chevron-left"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                [disabled]="pageNumber <= 1"
+                (onClick)="getDataPage(pageNumber - 1)"
+                size="small"
+              ></p-button>
+              <p-button
+                icon="pi pi-chevron-right"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                [disabled]="pageNumber >= totalPages"
+                (onClick)="getDataPage(pageNumber + 1)"
+                size="small"
+              ></p-button>
+            </div>
           </div>
         </div>
-        <div class="card-footer table-card-footer bg-light border-top">
-          <div class="row">
-            <div class="col-sm-4 col-12 text-sm-left text-center">
-              <button class="btn btn-secondary"
-                (click)="refresh()">
-                <i class="fas fa-redo-alt"></i>
-              </button>
-            </div>
-            <div class="col-sm-4 col-12 text-center">
-              <p class="mb-0 my-2">
-                {{ "TotalRecordsCount" | localize: totalItems }}
-              </p>
-            </div>
-            <div class="col-sm-4 col-12">
-              <div class="float-sm-right m-auto">
-                <abp-pagination-controls id="server"
-                  (pageChange)="getDataPage($event)">
-                </abp-pagination-controls>
-              </div>
-            </div>
-          </div>
+        <!-- Table -->
+        <div class="card-body p-0">
+          <p-table
+            [value]="roles | paginate: {
+              id: 'server',
+              itemsPerPage: pageSize,
+              currentPage: pageNumber,
+              totalItems: totalItems
+            }"
+            [tableStyle]="{ 'min-width': '40rem' }"
+            styleClass="p-datatable-sm list-table"
+            [loading]="isTableLoading"
+            [rowHover]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem;"></th>
+                <th>{{ "RoleName" | localize }}</th>
+                <th>{{ "DisplayName" | localize }}</th>
+                <th style="width: 60px; text-align: center;"></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-role>
+              <tr>
+                <td>
+                  <p-checkbox [binary]="true" [ngModel]="false" [name]="'select_' + role.id"></p-checkbox>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="row-avatar" [style.background-color]="getAvatarColor(role.name)">
+                      {{ getInitials(role.name) }}
+                    </div>
+                    <span class="ml-2 font-weight-bold" style="color: #333;">{{ role.name }}</span>
+                  </div>
+                </td>
+                <td style="color: #555;">{{ role.displayName }}</td>
+                <td style="text-align: center;">
+                  <p-button
+                    icon="pi pi-ellipsis-v"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="secondary"
+                    (onClick)="toggleActionMenu($event, role)"
+                  ></p-button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" class="text-center" style="padding: 2rem;">
+                  <i class="pi pi-shield" style="font-size: 2rem; color: #ccc;"></i>
+                  <p class="mt-2 text-muted">{{ "NoData" | localize }}</p>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
       </div>
     </div>
   </section>
+  <p-menu #actionMenu [model]="actionMenuItems" [popup]="true" appendTo="body"></p-menu>
 </div>

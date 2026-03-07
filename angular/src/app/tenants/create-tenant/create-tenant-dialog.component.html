@@ -15,8 +15,8 @@
       </label>
       <div class="col-md-9">
         <input
+          pInputText
           type="text"
-          class="form-control"
           name="tenancyName"
           id="tenancyName"
           minlength="2"
@@ -25,6 +25,7 @@
           [(ngModel)]="tenant.tenancyName"
           #tenancyNameModel="ngModel"
           #tenancyNameEl
+          class="w-100"
         />
         <abp-validation-summary
           [control]="tenancyNameModel"
@@ -38,8 +39,8 @@
       </label>
       <div class="col-md-9">
         <input
+          pInputText
           type="text"
-          class="form-control"
           name="name"
           id="name"
           maxlength="128"
@@ -47,6 +48,7 @@
           [(ngModel)]="tenant.name"
           #nameModel="ngModel"
           #nameEl
+          class="w-100"
         />
         <abp-validation-summary
           [control]="nameModel"
@@ -60,12 +62,13 @@
       </label>
       <div class="col-md-9">
         <input
+          pInputText
           type="text"
-          class="form-control"
           name="connectionString"
           id="connectionString"
           maxlength="1024"
           [(ngModel)]="tenant.connectionString"
+          class="w-100"
         />
       </div>
     </div>
@@ -75,8 +78,8 @@
       </label>
       <div class="col-md-9">
         <input
+          pInputText
           type="email"
-          class="form-control"
           name="adminEmailAddress"
           id="adminEmailAddress"
           pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
@@ -85,6 +88,7 @@
           [(ngModel)]="tenant.adminEmailAddress"
           #adminEmailAddressModel="ngModel"
           #adminEmailAddressEl
+          class="w-100"
         />
         <abp-validation-summary
           [control]="adminEmailAddressModel"
@@ -96,20 +100,16 @@
       <label class="col-md-3 col-form-label">
         {{ "IsActive" | localize }}
       </label>
-      <div class="col-md-9">
-        <div class="custom-control custom-checkbox">
-          <input
-            type="checkbox"
-            class="custom-control-input"
-            name="isActive"
-            id="isActive"
-            [(ngModel)]="tenant.isActive"
-          />
-          <label class="custom-control-label mt-2" for="isActive"></label>
-        </div>
+      <div class="col-md-9 d-flex align-items-center">
+        <p-checkbox
+          name="isActive"
+          [(ngModel)]="tenant.isActive"
+          [binary]="true"
+          inputId="isActive"
+        ></p-checkbox>
       </div>
     </div>
-    <p class="text-center text-info mb-0">
+    <p class="text-center text-info mb-0 mt-2">
       {{ "DefaultPasswordIs" | localize: "123qwe" }}
     </p>
   </div>
