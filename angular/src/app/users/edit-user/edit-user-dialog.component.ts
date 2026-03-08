@@ -1,12 +1,12 @@
 import {
   Component,
   Injector,
-  OnInit,
   EventEmitter,
   Output,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 import { forEach as _forEach, includes as _includes, map as _map } from 'lodash-es';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
@@ -16,11 +16,13 @@ import {
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
+  selector: 'app-edit-user-dialog',
   templateUrl: './edit-user-dialog.component.html'
 })
-export class EditUserDialogComponent extends AppComponentBase
-  implements OnInit {
+export class EditUserDialogComponent extends AppComponentBase {
+  @ViewChild('editUserModal') editUserModal: NgForm;
   saving = false;
+  visible = false;
   user = new UserDto();
   roles: RoleDto[] = [];
   checkedRolesMap: { [key: string]: boolean } = {};
@@ -31,22 +33,28 @@ export class EditUserDialogComponent extends AppComponentBase
   constructor(
     injector: Injector,
     public _userService: UserServiceProxy,
-    public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef
   ) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  show(id: number): void {
+    this.id = id;
+    this.saving = false;
     this._userService.get(this.id).subscribe((result) => {
       this.user = result;
 
       this._userService.getRoles().subscribe((result2) => {
         this.roles = result2.items;
         this.setInitialRolesStatus();
+        this.visible = true;
         this.cd.detectChanges();
       });
     });
+  }
+
+  hide(): void {
+    this.visible = false;
   }
 
   setInitialRolesStatus(): void {
@@ -83,7 +91,7 @@ export class EditUserDialogComponent extends AppComponentBase
     this._userService.update(this.user).subscribe(
       () => {
         this.notify.info(this.l('SavedSuccessfully'));
-        this.bsModalRef.hide();
+        this.hide();
         this.onSave.emit();
       },
       () => {

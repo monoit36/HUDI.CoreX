@@ -22,6 +22,7 @@ import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { MenuModule } from 'primeng/menu';
 import { TreeModule } from 'primeng/tree';
+import { DividerModule } from 'primeng/divider';
 
 const PRIMENG_MODULES = [
   ButtonModule,
@@ -44,7 +45,8 @@ const PRIMENG_MODULES = [
   PasswordModule,
   TooltipModule,
   MenuModule,
-  TreeModule
+  TreeModule,
+  DividerModule
 ];
 
 @NgModule({

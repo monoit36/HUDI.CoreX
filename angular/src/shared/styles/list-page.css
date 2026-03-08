@@ -1,166 +1,40 @@
 /* ═══════════════════════════════════════════
-   Shared List Page - Clean CRM-style design
+   Shared List Page - Sakai/PrimeNG style
    ═══════════════════════════════════════════ */
-
-/* ── Card container ── */
-:host ::ng-deep .card-list-page {
-  border-radius: 12px;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-}
-
-:host ::ng-deep .card-list-page .card-header {
-  padding: 10px 16px;
-}
-
-/* ── Compact icon buttons: 28×28 ── */
-:host ::ng-deep .card-header .p-button.p-button-sm,
-:host ::ng-deep .content-header .p-button.p-button-sm {
-  width: 28px;
-  height: 28px;
-  padding: 0;
-}
-
-:host ::ng-deep .card-header .p-button.p-button-sm .p-button-icon,
-:host ::ng-deep .content-header .p-button.p-button-sm .p-button-icon {
-  font-size: 0.8rem;
-}
-
-/* ── Filter area ── */
-:host ::ng-deep .filter-area .p-button.p-button-sm {
-  width: auto;
-  height: 28px;
-  padding: 0 10px;
-  font-size: 0.75rem;
-}
-
-.filter-area {
-  font-size: 0.8rem;
-}
-
-:host ::ng-deep .filter-area .p-radiobutton {
-  width: 16px;
-  height: 16px;
-}
-
-:host ::ng-deep .filter-area .p-radiobutton .p-radiobutton-box {
-  height: 16px;
-}
-
-:host ::ng-deep .filter-area label {
-  font-size: 0.8rem;
-}
-
-/* ── Search box ── */
-.search-input-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.search-input-wrapper .search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #aaa;
-  font-size: 0.8rem;
-  z-index: 1;
-  pointer-events: none;
-}
-
-:host ::ng-deep .search-input-wrapper .search-input.p-inputtext {
-  padding-left: 2rem;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  height: 32px;
-  min-width: 180px;
-  font-size: 0.8rem;
-}
-
-/* ── Header badges ── */
-.badge-count {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  background: #f0faf0;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  color: #444;
-  border: 1px solid #e0f0e0;
-}
-
-.pagination-info {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  font-size: 0.75rem;
-}
 
 /* ── Row avatar ── */
 .row-avatar {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 600;
   flex-shrink: 0;
   letter-spacing: 0.5px;
-}
-
-/* ── Table ── */
-:host ::ng-deep .list-table .p-datatable-thead>tr>th {
-  background: #fafafa;
-  color: #888;
-  font-weight: 500;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 8px 14px;
-  border-bottom: 1px solid #eee;
-  border-top: none;
-}
-
-:host ::ng-deep .list-table .p-datatable-tbody>tr>td {
-  padding: 10px 14px;
-  border-bottom: 1px solid #f0f0f0;
-  vertical-align: middle;
-  font-size: 0.8rem;
-}
-
-:host ::ng-deep .list-table .p-datatable-tbody>tr:hover>td {
-  background-color: #f8f9ff !important;
-}
-
-:host ::ng-deep .list-table .p-datatable-tbody>tr:last-child>td {
-  border-bottom: none;
 }
 
 /* ── Status tags ── */
 :host ::ng-deep .p-tag-rounded {
   border-radius: 20px;
   padding: 0.15rem 0.6rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
-/* ── Action menu button ── */
-:host ::ng-deep .list-table .p-button.p-button-text {
-  width: 28px;
-  height: 28px;
+/* ── Action menu button compact ── */
+:host ::ng-deep .p-datatable .p-button.p-button-text {
+  width: 2rem;
+  height: 2rem;
   padding: 0;
 }
 
-/* ── Round checkboxes ── */
-:host ::ng-deep .list-table .p-checkbox .p-checkbox-box {
-  border-radius: 50%;
+/* ── Checkbox square ── */
+:host ::ng-deep .p-datatable .p-checkbox .p-checkbox-box {
+  border-radius: 3px;
   width: 18px;
   height: 18px;
 }

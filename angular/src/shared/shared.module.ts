@@ -46,6 +46,7 @@ import { PrimeNGModule } from '@shared/primeng.module';
         EqualValidator
     ],
     exports: [
+        CommonModule,
         AbpPaginationControlsComponent,
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,

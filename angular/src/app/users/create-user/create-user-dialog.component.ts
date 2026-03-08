@@ -1,12 +1,12 @@
 import {
   Component,
   Injector,
-  OnInit,
   EventEmitter,
   Output,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 import { forEach as _forEach, map as _map } from 'lodash-es';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
@@ -17,11 +17,13 @@ import {
 import { AbpValidationError } from '@shared/components/validation/abp-validation.api';
 
 @Component({
+  selector: 'app-create-user-dialog',
   templateUrl: './create-user-dialog.component.html'
 })
-export class CreateUserDialogComponent extends AppComponentBase
-  implements OnInit {
+export class CreateUserDialogComponent extends AppComponentBase {
+  @ViewChild('createUserModal') createUserModal: NgForm;
   saving = false;
+  visible = false;
   user = new CreateUserDto();
   roles: RoleDto[] = [];
   checkedRolesMap: { [key: string]: boolean } = {};
@@ -45,20 +47,26 @@ export class CreateUserDialogComponent extends AppComponentBase
   constructor(
     injector: Injector,
     public _userService: UserServiceProxy,
-    public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef
   ) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  show(): void {
+    this.user = new CreateUserDto();
     this.user.isActive = true;
 
+    this.saving = false;
     this._userService.getRoles().subscribe((result) => {
       this.roles = result.items;
       this.setInitialRolesStatus();
+      this.visible = true;
       this.cd.detectChanges();
     });
+  }
+
+  hide(): void {
+    this.visible = false;
   }
 
   setInitialRolesStatus(): void {
@@ -70,8 +78,6 @@ export class CreateUserDialogComponent extends AppComponentBase
   }
 
   isRoleChecked(normalizedName: string): boolean {
-    // just return default role checked status
-    // it's better to use a setting
     return this.defaultRoleCheckedStatus;
   }
 
@@ -97,7 +103,7 @@ export class CreateUserDialogComponent extends AppComponentBase
     this._userService.create(this.user).subscribe(
       () => {
         this.notify.info(this.l('SavedSuccessfully'));
-        this.bsModalRef.hide();
+        this.hide();
         this.onSave.emit();
       },
       () => {

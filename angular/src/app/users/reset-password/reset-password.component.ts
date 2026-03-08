@@ -1,37 +1,43 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   UserServiceProxy,
   ResetPasswordDto
 } from '@shared/service-proxies/service-proxies';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'app-reset-password',
+  selector: 'app-reset-password-dialog',
   templateUrl: './reset-password.component.html'
 })
-export class ResetPasswordDialogComponent extends AppComponentBase
-  implements OnInit {
+export class ResetPasswordDialogComponent extends AppComponentBase {
+  @ViewChild('resetPasswordModal') resetPasswordModal: NgForm;
   public isLoading = false;
+  public visible = false;
   public resetPasswordDto: ResetPasswordDto;
   id: number;
 
   constructor(
     injector: Injector,
-    private _userService: UserServiceProxy,
-    public bsModalRef: BsModalRef
+    private _userService: UserServiceProxy
   ) {
     super(injector);
   }
 
-  ngOnInit() {
+  show(id: number) {
+    this.id = id;
     this.isLoading = true;
     this.resetPasswordDto = new ResetPasswordDto();
     this.resetPasswordDto.userId = this.id;
     this.resetPasswordDto.newPassword = Math.random()
       .toString(36)
-      .substr(2, 10);
+      .substring(2, 12);
     this.isLoading = false;
+    this.visible = true;
+  }
+
+  hide() {
+    this.visible = false;
   }
 
   public resetPassword(): void {
@@ -39,7 +45,7 @@ export class ResetPasswordDialogComponent extends AppComponentBase
     this._userService.resetPassword(this.resetPasswordDto).subscribe(
       () => {
         this.notify.info('Password Reset');
-        this.bsModalRef.hide();
+        this.hide();
       },
       () => {
         this.isLoading = false;
