@@ -47,7 +47,6 @@
               icon="pi pi-chevron-left"
               [outlined]="true"
               severity="secondary"
-              [rounded]="true"
               [disabled]="pageNumber <= 1"
               (onClick)="getDataPage(pageNumber - 1)"
             ></p-button>
@@ -55,7 +54,6 @@
               icon="pi pi-chevron-right"
               [outlined]="true"
               severity="secondary"
-              [rounded]="true"
               [disabled]="pageNumber >= totalPages"
               (onClick)="getDataPage(pageNumber + 1)"
             ></p-button>
@@ -163,7 +161,7 @@
                 <button
                   pButton pRipple
                   icon="pi pi-ellipsis-v"
-                  class="p-button-rounded p-button-text p-button-secondary"
+                  class="p-button-text p-button-secondary"
                   (click)="toggleActionMenu($event, user)"
                 ></button>
               </td>
