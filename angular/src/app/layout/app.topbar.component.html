@@ -1,6 +1,7 @@
 <div class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="/app/about">
-        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
+        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg"
+            alt="logo">
         <span>CoreX</span>
     </a>
 
@@ -8,30 +9,39 @@
         <i class="pi pi-bars"></i>
     </button>
 
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+        (click)="layoutService.showProfileSidebar()">
         <i class="pi pi-ellipsis-v"></i>
     </button>
 
-    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+    <div #topbarmenu class="layout-topbar-menu"
+        [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
         <!-- Language Dropdown -->
         <div class="flex align-items-center" style="position: relative;">
-            <button class="p-link layout-topbar-button" [pTooltip]="currentLanguage?.displayName" tooltipPosition="bottom"
-                    (click)="langMenuVisible = !langMenuVisible">
-                <i class="pi pi-globe"></i>
-                <span>{{ currentLanguage?.displayName }}</span>
+            <button class="p-link layout-topbar-button" [pTooltip]="currentLanguage?.displayName"
+                tooltipPosition="bottom" (click)="langMenuVisible = !langMenuVisible">
+                <i class="famfamfam-flags {{ currentLanguage.icon }}"></i>
             </button>
             @if (langMenuVisible) {
-                <div class="absolute bg-white border-round shadow-2 p-2" style="top: 100%; right: 0; min-width: 150px; z-index: 1000;">
-                    @for (language of languages; track language.name) {
-                        <a class="flex align-items-center gap-2 p-2 cursor-pointer border-round hover:surface-hover text-color no-underline"
-                           (click)="changeLanguage(language.name); langMenuVisible = false">
-                            <span class="famfamfam-flags {{ language.icon }}"></span>
-                            <span>{{ language.displayName }}</span>
-                        </a>
-                    }
-                </div>
+            <div class="absolute bg-white border-round shadow-2 p-2"
+                style="top: 100%; right: 0; min-width: 150px; z-index: 1000;">
+                @for (language of languages; track language.name) {
+                <a class="flex align-items-center gap-2 p-2 cursor-pointer border-round hover:surface-hover text-color no-underline"
+                    (click)="changeLanguage(language.name); langMenuVisible = false">
+                    <span class="famfamfam-flags {{ language.icon }}"></span>
+                    <span>{{ language.displayName }}</span>
+                </a>
+                }
+            </div>
             }
         </div>
+
+        <!-- Config / Settings -->
+        <button class="p-link layout-topbar-button" pTooltip="Settings" tooltipPosition="bottom"
+            (click)="layoutService.showConfigSidebar()">
+            <i class="pi pi-cog"></i>
+            <span>Settings</span>
+        </button>
 
         <!-- User Info -->
         <button class="p-link layout-topbar-button" [pTooltip]="shownLoginName" tooltipPosition="bottom">

@@ -26,3 +26,10 @@ a {
 .layout-wrapper {
     min-height: 100vh;
 }
+
+/* Override p-tree checkbox selection background */
+.p-tree .p-treenode-children .p-treenode-content.p-highlight,
+.p-tree .p-treenode .p-treenode-content.p-highlight {
+    background-color: transparent !important;
+    color: inherit !important;
+}

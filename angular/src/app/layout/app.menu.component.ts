@@ -18,13 +18,6 @@ export class AppMenuComponent extends AppComponentBase implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: this.l('HomePage'),
-                items: [
-                    { label: this.l('About'), icon: 'pi pi-fw pi-info-circle', routerLink: ['/app/about'] },
-                    { label: this.l('HomePage'), icon: 'pi pi-fw pi-home', routerLink: ['/app/home'] }
-                ]
-            },
-            {
                 label: this.l('Administration'),
                 visible: this.permission.isGranted('Pages.Administration'),
                 items: [
@@ -53,7 +46,7 @@ export class AppMenuComponent extends AppComponentBase implements OnInit {
                 visible: this.permission.isGranted('Pages.MasterData'),
                 items: [
                     {
-                        label: this.l('MasterData'),
+                        label: this.l('MasterDataDictionary'),
                         icon: 'pi pi-fw pi-database',
                         routerLink: ['/app/master-data']
                     }

@@ -22,31 +22,31 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                     },
                     {
                         path: 'users',
-                        loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+                        loadChildren: () => import('./administration/users/users.module').then((m) => m.UsersModule),
                         data: { permission: 'Pages.Administration.Users' },
                         canActivate: [AppRouteGuard]
                     },
                     {
                         path: 'roles',
-                        loadChildren: () => import('./roles/roles.module').then((m) => m.RolesModule),
+                        loadChildren: () => import('./administration/roles/roles.module').then((m) => m.RolesModule),
                         data: { permission: 'Pages.Administration.Roles' },
                         canActivate: [AppRouteGuard]
                     },
                     {
                         path: 'tenants',
-                        loadChildren: () => import('./tenants/tenants.module').then((m) => m.TenantsModule),
+                        loadChildren: () => import('./administration/tenants/tenants.module').then((m) => m.TenantsModule),
                         data: { permission: 'Pages.Administration.Tenants' },
                         canActivate: [AppRouteGuard]
                     },
                     {
                         path: 'master-data',
-                        loadChildren: () => import('./master-data/master-data.module').then((m) => m.MasterDataModule),
+                        loadChildren: () => import('./master-data/Dictionary/master-data.module').then((m) => m.MasterDataModule),
                         data: { permission: 'Pages.MasterData' },
                         canActivate: [AppRouteGuard]
                     },
                     {
                         path: 'update-password',
-                        loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+                        loadChildren: () => import('./administration/users/users.module').then((m) => m.UsersModule),
                         canActivate: [AppRouteGuard]
                     },
                     // Sakai Demo Routes
