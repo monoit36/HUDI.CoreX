@@ -1,5 +1,5 @@
-import { Component, Injector } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, Injector, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AccountServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppTenantAvailabilityState } from '@shared/AppEnums';
@@ -9,24 +9,39 @@ import {
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
+  selector: 'app-tenant-change-dialog',
   templateUrl: './tenant-change-dialog.component.html'
 })
 export class TenantChangeDialogComponent extends AppComponentBase {
   saving = false;
+  visible = false;
   tenancyName = '';
+
+  @ViewChild('changeTenantModal') changeTenantModal: NgForm;
 
   constructor(
     injector: Injector,
     private _accountService: AccountServiceProxy,
-    public bsModalRef: BsModalRef
+    private cd: ChangeDetectorRef
   ) {
     super(injector);
+  }
+
+  show(tenancyName: string): void {
+    this.saving = false;
+    this.tenancyName = tenancyName;
+    this.visible = true;
+    this.cd.detectChanges();
+  }
+
+  hide(): void {
+    this.visible = false;
   }
 
   save(): void {
     if (!this.tenancyName) {
       abp.multiTenancy.setTenantIdCookie(undefined);
-      this.bsModalRef.hide();
+      this.hide();
       location.reload();
       return;
     }
@@ -54,6 +69,7 @@ export class TenantChangeDialogComponent extends AppComponentBase {
       },
       () => {
         this.saving = false;
+        this.cd.detectChanges();
       }
     );
   }

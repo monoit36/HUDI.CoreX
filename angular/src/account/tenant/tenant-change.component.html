@@ -1,18 +1,18 @@
-﻿@if (isMultiTenancyEnabled) {
-  <div class="text-center tenant-change-component">
-    <span>
-      {{ "CurrentTenant" | localize }}:
-      @if (tenancyName) {
-        <span title="{{ name }}">
-          <strong>{{ tenancyName }}</strong>
-        </span>
-      }
-      @if (!tenancyName) {
-        <span>{{ "NotSelected" | localize }}</span>
-      }
-      (<a href="javascript:;" (click)="showChangeModal()">
-      {{ "Change" | localize }} </a
-      >)
-    </span>
+@if (isMultiTenancyEnabled) {
+  <div class="flex align-items-center gap-2">
+    <span class="text-600 font-medium">{{ "CurrentTenant" | localize }}:</span>
+    @if (tenancyName) {
+      <span class="p-tag p-tag-info p-tag-rounded px-3 py-1 cursor-pointer" [title]="name" (click)="showChangeModal()">
+        <i class="pi pi-building mr-2"></i><strong>{{ tenancyName }}</strong>
+      </span>
+    }
+    @if (!tenancyName) {
+      <span class="p-tag p-tag-secondary p-tag-rounded px-3 py-1 cursor-pointer" (click)="showChangeModal()">
+        <i class="pi pi-building mr-2"></i>{{ "NotSelected" | localize }}
+      </span>
+    }
+    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm p-button-secondary" (click)="showChangeModal()" pTooltip="{{ 'Change' | localize }}" tooltipPosition="bottom"></button>
   </div>
 }
+
+<app-tenant-change-dialog #tenantChangeDialog></app-tenant-change-dialog>

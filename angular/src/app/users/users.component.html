@@ -5,124 +5,87 @@
         <p-toast></p-toast>
 
         <!-- Header: Title + Active badge -->
-        <div class="flex justify-content-between align-items-start mb-4">
+        <div
+          class="flex flex-column sm:flex-row justify-content-between align-items-start sm:align-items-center mb-4 gap-3">
           <div>
-            <h4 class="m-0 text-900 font-bold">{{ "Users" | localize }}</h4>
-            <span class="text-500 text-sm mt-1 block">{{ "TotalRecordsCount" | localize: totalItems }}</span>
+            <h4 class="m-0 text-900 font-bold mb-1">{{ "Users" | localize }}</h4>
+            <span class="text-500 text-sm block">{{ "TotalRecordsCount" | localize: totalItems }}</span>
           </div>
-          <div class="flex align-items-center gap-2">
-            <button pButton pRipple icon="pi pi-plus" [label]="'CreateNewUser' | localize" class="p-button-success p-button-sm" (click)="createUser()"></button>
+          <div class="flex flex-column sm:flex-row align-items-center gap-3 w-full sm:w-auto">
+            <span
+              class="inline-flex align-items-center gap-2 px-3 py-2 border-round-3xl border-1 surface-border bg-white w-full sm:w-auto justify-content-center">
+              <span class="w-1rem h-1rem border-circle bg-green-500"></span>
+              <span class="font-medium text-700 text-sm">{{ totalItems }} Active User</span>
+            </span>
+            <button pButton pRipple icon="pi pi-plus" [label]="'CreateNewUser' | localize"
+              class="p-button-success w-full sm:w-auto" (click)="createUser()"></button>
           </div>
         </div>
-
         <!-- Control bar: Search + Filter + Refresh + Pagination -->
-        <div class="flex align-items-center justify-content-between mb-3 pb-3 border-bottom-1 surface-border">
-          <div class="flex align-items-center gap-2">
-            <span class="p-input-icon-left">
+        <div
+          class="flex flex-column sm:flex-row align-items-center justify-content-between mb-4 pb-4 border-bottom-1 surface-border gap-3">
+          <div class="w-full sm:w-auto">
+            <span class="p-input-icon-left w-full">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)" [placeholder]="'Search' | localize" style="width: 220px;" />
+              <input pInputText type="text" [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)"
+                [placeholder]="'Search' | localize" class="w-full sm:w-16rem" />
             </span>
           </div>
-          <div class="flex align-items-center gap-2">
-            <p-button
-              icon="pi pi-filter"
-              [outlined]="true"
-              severity="secondary"
-              (onClick)="advancedFiltersVisible = !advancedFiltersVisible"
-              pTooltip="Filter"
-              tooltipPosition="bottom"
-            ></p-button>
-            <p-button
-              icon="pi pi-refresh"
-              [outlined]="true"
-              severity="secondary"
-              (onClick)="refresh()"
-              pTooltip="Refresh"
-              tooltipPosition="bottom"
-            ></p-button>
-            <span class="text-600 text-sm white-space-nowrap border-1 surface-border border-round px-3 py-2">
+          <div class="flex align-items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+            <p-button icon="pi pi-filter" [outlined]="true" severity="secondary"
+              (onClick)="advancedFiltersVisible = !advancedFiltersVisible" pTooltip="Filter"
+              tooltipPosition="bottom"></p-button>
+
+            <div class="mx-2 border-left-1 surface-border" style="height: 1.5rem"></div>
+
+            <p-button icon="pi pi-refresh" [outlined]="true" severity="secondary" (onClick)="refresh()"
+              pTooltip="Refresh" tooltipPosition="bottom"></p-button>
+
+            <span
+              class="text-700 text-sm white-space-nowrap border-1 surface-border border-round px-3 py-2 font-medium flex align-items-center justify-content-center"
+              style="height: 40px;">
               {{ pageNumber }} of {{ totalPages }}
             </span>
-            <p-button
-              icon="pi pi-chevron-left"
-              [outlined]="true"
-              severity="secondary"
-              [disabled]="pageNumber <= 1"
-              (onClick)="getDataPage(pageNumber - 1)"
-            ></p-button>
-            <p-button
-              icon="pi pi-chevron-right"
-              [outlined]="true"
-              severity="secondary"
-              [disabled]="pageNumber >= totalPages"
-              (onClick)="getDataPage(pageNumber + 1)"
-            ></p-button>
+
+            <p-button icon="pi pi-chevron-left" [outlined]="true" severity="secondary" [disabled]="pageNumber <= 1"
+              (onClick)="getDataPage(pageNumber - 1)"></p-button>
+            <p-button icon="pi pi-chevron-right" [outlined]="true" severity="secondary"
+              [disabled]="pageNumber >= totalPages" (onClick)="getDataPage(pageNumber + 1)"></p-button>
           </div>
         </div>
 
         <!-- Advanced Filters -->
         @if (advancedFiltersVisible) {
-          <div class="flex align-items-center flex-wrap gap-3 pb-3 mb-3 border-bottom-1 surface-border">
-            <label class="font-medium text-900">{{ "IsActive" | localize }}:</label>
-            <div class="flex align-items-center gap-2">
-              <p-radioButton
-                name="isActive"
-                [value]="undefined"
-                [(ngModel)]="isActive"
-                inputId="isActiveAll"
-              ></p-radioButton>
-              <label for="isActiveAll" class="mr-2">{{ "All" | localize }}</label>
+        <div class="flex align-items-center flex-wrap gap-3 pb-3 mb-3 border-bottom-1 surface-border">
+          <label class="font-medium text-900">{{ "IsActive" | localize }}:</label>
+          <div class="flex align-items-center gap-2">
+            <p-radioButton name="isActive" [value]="undefined" [(ngModel)]="isActive"
+              inputId="isActiveAll"></p-radioButton>
+            <label for="isActiveAll" class="mr-2">{{ "All" | localize }}</label>
 
-              <p-radioButton
-                name="isActive"
-                [value]="true"
-                [(ngModel)]="isActive"
-                inputId="isActiveActive"
-              ></p-radioButton>
-              <label for="isActiveActive" class="mr-2">{{ "Yes" | localize }}</label>
+            <p-radioButton name="isActive" [value]="true" [(ngModel)]="isActive"
+              inputId="isActiveActive"></p-radioButton>
+            <label for="isActiveActive" class="mr-2">{{ "Yes" | localize }}</label>
 
-              <p-radioButton
-                name="isActive"
-                [value]="false"
-                [(ngModel)]="isActive"
-                inputId="isActivePassive"
-              ></p-radioButton>
-              <label for="isActivePassive" class="mr-2">{{ "No" | localize }}</label>
-            </div>
-            <p-button
-              [label]="'Search' | localize"
-              icon="pi pi-search"
-              size="small"
-              (onClick)="getDataPage(1)"
-            ></p-button>
-            <p-button
-              [label]="'Clear' | localize"
-              severity="secondary"
-              [text]="true"
-              size="small"
-              (onClick)="clearFilters()"
-            ></p-button>
+            <p-radioButton name="isActive" [value]="false" [(ngModel)]="isActive"
+              inputId="isActivePassive"></p-radioButton>
+            <label for="isActivePassive" class="mr-2">{{ "No" | localize }}</label>
           </div>
+          <p-button [label]="'Search' | localize" icon="pi pi-search" size="small"
+            (onClick)="getDataPage(1)"></p-button>
+          <p-button [label]="'Clear' | localize" severity="secondary" [text]="true" size="small"
+            (onClick)="clearFilters()"></p-button>
+        </div>
         }
 
         <!-- Table -->
-        <p-table
-          #dt
-          [value]="users | paginate: {
+        <p-table #dt [value]="users | paginate: {
             id: 'server',
             itemsPerPage: pageSize,
             currentPage: pageNumber,
             totalItems: totalItems
-          }"
-          responsiveLayout="scroll"
-          [rows]="pageSize"
-          [rowHover]="true"
-          dataKey="id"
-          [loading]="isTableLoading"
-          [(selection)]="selectedUsers"
-          selectionMode="multiple"
-          styleClass="p-datatable-sm"
-        >
+          }" responsiveLayout="scroll" [rows]="pageSize" [rowHover]="true" dataKey="id" [loading]="isTableLoading"
+          [(selection)]="selectedUsers" selectionMode="multiple" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 3rem">
@@ -130,8 +93,10 @@
               </th>
               <th pSortableColumn="userName">{{ "UserName" | localize }} <p-sortIcon field="userName"></p-sortIcon></th>
               <th pSortableColumn="fullName">{{ "FullName" | localize }} <p-sortIcon field="fullName"></p-sortIcon></th>
-              <th pSortableColumn="emailAddress">{{ "EmailAddress" | localize }} <p-sortIcon field="emailAddress"></p-sortIcon></th>
-              <th pSortableColumn="isActive" style="width: 8rem">{{ "IsActive" | localize }} <p-sortIcon field="isActive"></p-sortIcon></th>
+              <th pSortableColumn="emailAddress">{{ "EmailAddress" | localize }} <p-sortIcon
+                  field="emailAddress"></p-sortIcon></th>
+              <th pSortableColumn="isActive" style="width: 8rem">{{ "IsActive" | localize }} <p-sortIcon
+                  field="isActive"></p-sortIcon></th>
               <th style="width: 4rem"></th>
             </tr>
           </ng-template>
@@ -151,19 +116,12 @@
               <td>{{ user.fullName }}</td>
               <td class="text-600">{{ user.emailAddress }}</td>
               <td>
-                <p-tag
-                  [value]="user.isActive ? ('Yes' | localize) : ('No' | localize)"
-                  [severity]="user.isActive ? 'success' : 'danger'"
-                  [rounded]="true"
-                ></p-tag>
+                <p-tag [value]="user.isActive ? ('Yes' | localize) : ('No' | localize)"
+                  [severity]="user.isActive ? 'success' : 'danger'" [rounded]="true"></p-tag>
               </td>
               <td class="text-center">
-                <button
-                  pButton pRipple
-                  icon="pi pi-ellipsis-v"
-                  class="p-button-text p-button-secondary"
-                  (click)="toggleActionMenu($event, user)"
-                ></button>
+                <p-button icon="pi pi-ellipsis-h" [text]="true" severity="secondary"
+                  (onClick)="toggleActionMenu($event, user)"></p-button>
               </td>
             </tr>
           </ng-template>
@@ -188,20 +146,25 @@
       <span *ngIf="userToDelete">{{ 'UserDeleteWarningMessage' | localize: userToDelete.fullName }}</span>
     </div>
     <ng-template pTemplate="footer">
-      <button pButton pRipple icon="pi pi-times" class="p-button-text" [label]="'No' | localize" (click)="deleteUserDialog = false"></button>
-      <button pButton pRipple icon="pi pi-check" class="p-button-text" [label]="'Yes' | localize" (click)="confirmDelete()"></button>
+      <button pButton pRipple icon="pi pi-times" class="p-button-text" [label]="'No' | localize"
+        (click)="deleteUserDialog = false"></button>
+      <button pButton pRipple icon="pi pi-check" class="p-button-text" [label]="'Yes' | localize"
+        (click)="confirmDelete()"></button>
     </ng-template>
   </p-dialog>
 
   <!-- Delete multiple users dialog -->
-  <p-dialog [(visible)]="deleteUsersDialog" header="{{ 'Confirm' | localize }}" [modal]="true" [style]="{width:'450px'}">
+  <p-dialog [(visible)]="deleteUsersDialog" header="{{ 'Confirm' | localize }}" [modal]="true"
+    [style]="{width:'450px'}">
     <div class="flex align-items-center justify-content-center">
       <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color: var(--yellow-500)"></i>
       <span>{{ 'DeleteSelectedUsersConfirm' | localize }}</span>
     </div>
     <ng-template pTemplate="footer">
-      <button pButton pRipple icon="pi pi-times" class="p-button-text" [label]="'No' | localize" (click)="deleteUsersDialog = false"></button>
-      <button pButton pRipple icon="pi pi-check" class="p-button-text" [label]="'Yes' | localize" (click)="confirmDeleteSelected()"></button>
+      <button pButton pRipple icon="pi pi-times" class="p-button-text" [label]="'No' | localize"
+        (click)="deleteUsersDialog = false"></button>
+      <button pButton pRipple icon="pi pi-check" class="p-button-text" [label]="'Yes' | localize"
+        (click)="confirmDeleteSelected()"></button>
     </ng-template>
   </p-dialog>
 

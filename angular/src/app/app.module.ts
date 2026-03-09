@@ -13,6 +13,13 @@ import { AppComponent } from './app.component';
 import { SharedModule } from '@shared/shared.module';
 import { ServiceProxyModule } from '@shared/service-proxies/service-proxy.module';
 import { AppLayoutModule } from './layout/app.layout.module';
+import { CountryService } from './demo/service/country.service';
+import { CustomerService } from './demo/service/customer.service';
+import { EventService } from './demo/service/event.service';
+import { IconService } from './demo/service/icon.service';
+import { NodeService } from './demo/service/node.service';
+import { PhotoService } from './demo/service/photo.service';
+import { ProductService } from './demo/service/product.service';
 
 @NgModule({
     declarations: [
@@ -34,6 +41,8 @@ import { AppLayoutModule } from './layout/app.layout.module';
         SharedModule,
         AppLayoutModule
     ],
-    providers: []
+    providers: [
+        CountryService, CustomerService, EventService, IconService, NodeService, PhotoService, ProductService
+    ]
 })
 export class AppModule {}

@@ -1,228 +1,180 @@
 <div [@routerTransition]>
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col">
-          <h1 class="mb-0" style="font-size: 1.5rem; font-weight: 600;">{{ "MasterData" | localize }}</h1>
-          <small class="text-muted">{{ "TotalRecordsCount" | localize: totalItems }}</small>
-        </div>
-        <div class="col-auto d-flex align-items-center">
-          <span class="badge-count mr-3">
-            <i class="pi pi-circle-fill text-success" style="font-size: 0.5rem; vertical-align: middle;"></i>
-            <span class="ml-1">{{ totalItems }} {{ "Records" | localize }}</span>
-          </span>
-          <p-button
-            *ngIf="isGranted('Pages.MasterData.Dictionary.Create')"
-            icon="pi pi-plus"
-            [rounded]="true"
-            size="small"
-            (onClick)="createItem()"
-            pTooltip="Create"
-            tooltipPosition="bottom"
-          ></p-button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="content px-2">
-    <div class="container-fluid">
-      <div class="card card-list-page">
-        <!-- Toolbar -->
-        <div class="card-header border-bottom" style="background: #fff;">
-          <div class="d-flex align-items-center justify-content-between flex-wrap">
-            <!-- Search -->
-            <div class="search-input-wrapper">
-              <i class="pi pi-search search-icon"></i>
-              <input
-                pInputText
-                type="text"
-                name="keyword"
-                [placeholder]="'Search' | localize"
-                [(ngModel)]="keyword"
-                (keyup.enter)="getDataPage(1)"
-                class="search-input"
-              />
-            </div>
-            <!-- Right actions -->
-            <div class="d-flex align-items-center">
-              <p-button
-                icon="pi pi-filter"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                size="small"
-                (onClick)="advancedFiltersVisible = !advancedFiltersVisible"
-                pTooltip="Filter"
-                tooltipPosition="bottom"
-                class="mr-2"
-              ></p-button>
-              <p-button
-                icon="pi pi-refresh"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                size="small"
-                (onClick)="refresh()"
-                pTooltip="Refresh"
-                tooltipPosition="bottom"
-                class="mr-2"
-              ></p-button>
-              <span class="pagination-info mr-2" style="white-space: nowrap; color: #666;">
-                {{ pageNumber }} of {{ totalPages }}
-              </span>
-              <p-button
-                icon="pi pi-chevron-left"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                [disabled]="pageNumber <= 1"
-                (onClick)="getDataPage(pageNumber - 1)"
-                size="small"
-              ></p-button>
-              <p-button
-                icon="pi pi-chevron-right"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                [disabled]="pageNumber >= totalPages"
-                (onClick)="getDataPage(pageNumber + 1)"
-                size="small"
-              ></p-button>
-            </div>
+  <div class="grid">
+    <div class="col-12">
+      <div class="card px-5 py-5">
+
+        <!-- Header: Title + Create button -->
+        <div class="flex flex-column sm:flex-row justify-content-between align-items-start sm:align-items-center mb-4 gap-3">
+          <div>
+            <h4 class="m-0 text-900 font-bold mb-1">{{ "MasterData" | localize }}</h4>
+            <span class="text-500 text-sm block">{{ "TotalRecordsCount" | localize: totalItems }}</span>
           </div>
-          <!-- Advanced Filters -->
-          @if (advancedFiltersVisible) {
-            <div class="mt-3 pt-3 border-top filter-area">
-              <div class="d-flex align-items-center flex-wrap">
-                <label class="mr-3 mb-0 font-weight-bold">{{ "IsActive" | localize }}:</label>
-                <div class="d-flex align-items-center">
-                  <p-radioButton
-                    name="isActive"
-                    [value]="undefined"
-                    [(ngModel)]="isActive"
-                    inputId="isActiveAll"
-                  ></p-radioButton>
-                  <label for="isActiveAll" class="ml-1 mr-3 mb-0">{{ "All" | localize }}</label>
+          <div class="flex flex-column sm:flex-row align-items-center gap-3 w-full sm:w-auto">
+            <span class="inline-flex align-items-center gap-2 px-3 py-2 border-round-3xl border-1 surface-border bg-white w-full sm:w-auto justify-content-center">
+              <span class="w-1rem h-1rem border-circle bg-purple-500"></span>
+              <span class="font-medium text-700 text-sm">{{ totalItems }} Active Data</span>
+            </span>
+            <button
+              *ngIf="isGranted('Pages.MasterData.Dictionary.Create')"
+              pButton pRipple
+              icon="pi pi-plus"
+              [label]="'CreateMasterData' | localize"
+              class="p-button-success w-full sm:w-auto"
+              (click)="createItem()"
+            ></button>
+          </div>
+        </div>
 
-                  <p-radioButton
-                    name="isActive"
-                    [value]="true"
-                    [(ngModel)]="isActive"
-                    inputId="isActiveActive"
-                  ></p-radioButton>
-                  <label for="isActiveActive" class="ml-1 mr-3 mb-0">{{ "Yes" | localize }}</label>
+        <!-- Control bar: Search + Filter + Refresh + Pagination -->
+        <!-- Control bar: Search + Filter + Refresh + Pagination -->
+        <div class="flex flex-column sm:flex-row align-items-center justify-content-between mb-4 pb-4 border-bottom-1 surface-border gap-3">
+          <div class="w-full sm:w-auto">
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)"
+                [placeholder]="'Search' | localize" class="w-full sm:w-16rem" />
+            </span>
+          </div>
+          <div class="flex align-items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+            <p-button
+              icon="pi pi-filter"
+              [outlined]="true"
+              severity="secondary"
+              (onClick)="advancedFiltersVisible = !advancedFiltersVisible"
+              pTooltip="Filter"
+              tooltipPosition="bottom"
+            ></p-button>
+            <div class="mx-2 border-left-1 surface-border" style="height: 1.5rem"></div>
+            <p-button
+              icon="pi pi-refresh"
+              [outlined]="true"
+              severity="secondary"
+              (onClick)="refresh()"
+              pTooltip="Refresh"
+              tooltipPosition="bottom"
+            ></p-button>
+            <span class="text-700 text-sm white-space-nowrap border-1 surface-border border-round px-3 py-2 font-medium flex align-items-center justify-content-center" style="height: 40px;">
+              {{ pageNumber }} of {{ totalPages }}
+            </span>
+            <p-button
+              icon="pi pi-chevron-left"
+              [outlined]="true"
+              severity="secondary"
+              [disabled]="pageNumber <= 1"
+              (onClick)="getDataPage(pageNumber - 1)"
+            ></p-button>
+            <p-button
+              icon="pi pi-chevron-right"
+              [outlined]="true"
+              severity="secondary"
+              [disabled]="pageNumber >= totalPages"
+              (onClick)="getDataPage(pageNumber + 1)"
+            ></p-button>
+          </div>
+        </div>
 
-                  <p-radioButton
-                    name="isActive"
-                    [value]="false"
-                    [(ngModel)]="isActive"
-                    inputId="isActivePassive"
-                  ></p-radioButton>
-                  <label for="isActivePassive" class="ml-1 mr-3 mb-0">{{ "No" | localize }}</label>
-                </div>
-                <div class="ml-3">
-                  <input
-                    pInputText
-                    type="text"
-                    name="categoryCode"
-                    placeholder="Category Code"
-                    [(ngModel)]="categoryCode"
-                    class="search-input"
-                    style="height: 28px; font-size: 0.8rem;"
-                  />
-                </div>
-                <p-button
-                  [label]="'Search' | localize"
-                  icon="pi pi-search"
-                  size="small"
-                  (onClick)="getDataPage(1)"
-                  class="ml-3"
-                ></p-button>
-                <p-button
-                  [label]="'Clear' | localize"
-                  severity="secondary"
-                  [text]="true"
-                  size="small"
-                  (onClick)="clearFilters()"
-                  class="ml-1"
-                ></p-button>
-              </div>
+        <!-- Advanced Filters -->
+        @if (advancedFiltersVisible) {
+          <div class="flex align-items-center flex-wrap gap-3 pb-3 mb-3 border-bottom-1 surface-border">
+            <label class="font-medium text-900">{{ "IsActive" | localize }}:</label>
+            <div class="flex align-items-center gap-2">
+              <p-radioButton name="isActive" [value]="undefined" [(ngModel)]="isActive" inputId="isActiveAll"></p-radioButton>
+              <label for="isActiveAll" class="mr-2">{{ "All" | localize }}</label>
+              <p-radioButton name="isActive" [value]="true" [(ngModel)]="isActive" inputId="isActiveActive"></p-radioButton>
+              <label for="isActiveActive" class="mr-2">{{ "Yes" | localize }}</label>
+              <p-radioButton name="isActive" [value]="false" [(ngModel)]="isActive" inputId="isActivePassive"></p-radioButton>
+              <label for="isActivePassive" class="mr-2">{{ "No" | localize }}</label>
             </div>
-          }
-        </div>
+            <span class="p-input-icon-left">
+              <i class="pi pi-tag"></i>
+              <input pInputText type="text" [(ngModel)]="categoryCode" placeholder="Category Code" style="width: 160px;" />
+            </span>
+            <p-button [label]="'Search' | localize" icon="pi pi-search" size="small" (onClick)="getDataPage(1)"></p-button>
+            <p-button [label]="'Clear' | localize" severity="secondary" [text]="true" size="small" (onClick)="clearFilters()"></p-button>
+          </div>
+        }
+
         <!-- Table -->
-        <div class="card-body p-0">
-          <p-table
-            [value]="items | paginate: {
-              id: 'server',
-              itemsPerPage: pageSize,
-              currentPage: pageNumber,
-              totalItems: totalItems
-            }"
-            [tableStyle]="{ 'min-width': '60rem' }"
-            styleClass="p-datatable-sm list-table"
-            [loading]="isTableLoading"
-            [rowHover]="true"
-          >
-            <ng-template pTemplate="header">
-              <tr>
-                <th style="width: 3rem;"></th>
-                <th>{{ "CategoryCode" | localize }}</th>
-                <th>{{ "Code" | localize }}</th>
-                <th>{{ "Value" | localize }}</th>
-                <th>{{ "DisplayValue" | localize }}</th>
-                <th>{{ "SortOrder" | localize }}</th>
-                <th style="width: 120px;">{{ "IsActive" | localize }}</th>
-                <th style="width: 60px; text-align: center;"></th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-item>
-              <tr>
-                <td>
-                  <p-checkbox [binary]="true" [ngModel]="false" [name]="'select_' + item.id"></p-checkbox>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="row-avatar" [style.background-color]="getAvatarColor(item.categoryCode)">
-                      {{ getInitials(item.categoryCode) }}
-                    </div>
-                    <span class="ml-2 font-weight-bold" style="color: #333;">{{ item.categoryCode }}</span>
+        <p-table
+          [value]="items | paginate: {
+            id: 'server',
+            itemsPerPage: pageSize,
+            currentPage: pageNumber,
+            totalItems: totalItems
+          }"
+          responsiveLayout="scroll"
+          [rows]="pageSize"
+          [rowHover]="true"
+          dataKey="id"
+          [loading]="isTableLoading"
+          [(selection)]="selectedItems"
+          selectionMode="multiple"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="categoryCode">{{ "CategoryCode" | localize }} <p-sortIcon field="categoryCode"></p-sortIcon></th>
+              <th pSortableColumn="code">{{ "Code" | localize }} <p-sortIcon field="code"></p-sortIcon></th>
+              <th pSortableColumn="value">{{ "Value" | localize }} <p-sortIcon field="value"></p-sortIcon></th>
+              <th>{{ "DisplayValue" | localize }}</th>
+              <th pSortableColumn="sortOrder" style="width: 7rem">{{ "SortOrder" | localize }} <p-sortIcon field="sortOrder"></p-sortIcon></th>
+              <th pSortableColumn="isActive" style="width: 8rem">{{ "IsActive" | localize }} <p-sortIcon field="isActive"></p-sortIcon></th>
+              <th style="width: 4rem"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="item"></p-tableCheckbox>
+              </td>
+              <td>
+                <div class="flex align-items-center gap-2">
+                  <div class="row-avatar" [style.background-color]="getAvatarColor(item.categoryCode)">
+                    {{ getInitials(item.categoryCode) }}
                   </div>
-                </td>
-                <td style="color: #555;">{{ item.code }}</td>
-                <td style="color: #555;">{{ item.value }}</td>
-                <td style="color: #555;">{{ item.displayValue }}</td>
-                <td style="color: #888;">{{ item.sortOrder }}</td>
-                <td>
-                  <p-tag
-                    [value]="item.isActive ? 'Active' : 'Inactive'"
-                    [severity]="item.isActive ? 'success' : 'danger'"
-                    [rounded]="true"
-                  ></p-tag>
-                </td>
-                <td style="text-align: center;">
-                  <p-button
-                    icon="pi pi-ellipsis-v"
-                    [rounded]="true"
-                    [text]="true"
-                    severity="secondary"
-                    (onClick)="toggleActionMenu($event, item)"
-                  ></p-button>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="8" class="text-center" style="padding: 2rem;">
-                  <i class="pi pi-database" style="font-size: 2rem; color: #ccc;"></i>
-                  <p class="mt-2 text-muted">{{ "NoData" | localize }}</p>
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
+                  <span class="font-medium text-900">{{ item.categoryCode }}</span>
+                </div>
+              </td>
+              <td>{{ item.code }}</td>
+              <td>{{ item.value }}</td>
+              <td class="text-600">{{ item.displayValue }}</td>
+              <td class="text-600">{{ item.sortOrder }}</td>
+              <td>
+                <p-tag
+                  [value]="item.isActive ? ('Yes' | localize) : ('No' | localize)"
+                  [severity]="item.isActive ? 'success' : 'danger'"
+                  [rounded]="true"
+                ></p-tag>
+              </td>
+              <td class="text-center">
+                <p-button
+                  icon="pi pi-ellipsis-h"
+                  [text]="true"
+                  severity="secondary"
+                  (onClick)="toggleActionMenu($event, item)"
+                ></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8" class="text-center p-5">
+                <i class="pi pi-database text-400" style="font-size: 2rem;"></i>
+                <p class="mt-2 text-500">{{ "NoData" | localize }}</p>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
       </div>
     </div>
-  </section>
+  </div>
+
   <p-menu #actionMenu [model]="actionMenuItems" [popup]="true" appendTo="body"></p-menu>
+
+  <app-create-master-data-dialog #createDialog (onSave)="refresh()"></app-create-master-data-dialog>
+  <app-edit-master-data-dialog #editDialog (onSave)="refresh()"></app-edit-master-data-dialog>
 </div>

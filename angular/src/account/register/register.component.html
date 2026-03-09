@@ -1,147 +1,145 @@
-﻿<div [@routerTransition]>
-  <h4 class="text-center mb-3">{{ "Register" | localize }}</h4>
-  <form autocomplete="off" #registerForm="ngForm" (ngSubmit)="save()">
-    <div class="form-group">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          name="name"
-          placeholder="{{ 'Name' | localize }}"
-          required
-          maxlength="64"
-          [(ngModel)]="model.name"
-          #nameModel="ngModel"
-          #nameEl
-        />
-        <div class="input-group-append">
-          <div class="input-group-text">
-            <span class="fas fa-arrow-left"></span>
-          </div>
+<div class="flex flex-column align-items-center justify-content-center w-full" [@routerTransition]>
+  <!-- Logo -->
+  <div class="mb-5 flex-shrink-0 text-center">
+    <h1 class="text-primary font-bold text-5xl m-0">HUDI.<span class="text-900">CoreX</span></h1>
+  </div>
+
+  <!-- Register Card container with gradient border effect -->
+  <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+    <div class="w-full surface-card py-7 px-5 sm:px-8 flex flex-column align-items-center" style="border-radius:53px; min-width: 400px; max-width: 500px;">
+      
+      <div class="text-center mb-5 w-full">
+        <div class="text-900 text-3xl font-medium mb-3">{{ "Register" | localize }}</div>
+        <span class="text-600 font-medium">Create a new account</span>
+      </div>
+
+      <form autocomplete="off" #registerForm="ngForm" (ngSubmit)="save()" class="w-full p-fluid">
+        <!-- Name -->
+        <div class="mb-4 field">
+          <label for="name" class="font-medium text-900">{{ "Name" | localize }}</label>
+          <input
+            id="name"
+            type="text"
+            pInputText
+            class="p-3"
+            name="name"
+            [placeholder]="'Name' | localize"
+            required
+            maxlength="64"
+            [(ngModel)]="model.name"
+            #nameModel="ngModel"
+            #nameEl
+            [ngClass]="{'ng-invalid ng-dirty': nameModel.invalid && (nameModel.dirty || nameModel.touched)}"
+          />
+          <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
         </div>
-      </div>
-      <abp-validation-summary
-        [control]="nameModel"
-        [controlEl]="nameEl"
-      ></abp-validation-summary>
-    </div>
-    <div class="form-group">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          name="surname"
-          placeholder="{{ 'Surname' | localize }}"
-          required
-          maxlength="64"
-          [(ngModel)]="model.surname"
-          #surnameModel="ngModel"
-          #surnameEl
-        />
-        <div class="input-group-append">
-          <div class="input-group-text">
-            <span class="fas fa-arrow-left"></span>
-          </div>
+
+        <!-- Surname -->
+        <div class="mb-4 field">
+          <label for="surname" class="font-medium text-900">{{ "Surname" | localize }}</label>
+          <input
+            id="surname"
+            type="text"
+            pInputText
+            class="p-3"
+            name="surname"
+            [placeholder]="'Surname' | localize"
+            required
+            maxlength="64"
+            [(ngModel)]="model.surname"
+            #surnameModel="ngModel"
+            #surnameEl
+            [ngClass]="{'ng-invalid ng-dirty': surnameModel.invalid && (surnameModel.dirty || surnameModel.touched)}"
+          />
+          <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl"></abp-validation-summary>
         </div>
-      </div>
-      <abp-validation-summary
-        [control]="surnameModel"
-        [controlEl]="surnameEl"
-      ></abp-validation-summary>
-    </div>
-    <div class="form-group">
-      <div class="input-group">
-        <input
-          type="email"
-          class="form-control"
-          name="emailAddress"
-          placeholder="{{ 'EmailAddress' | localize }}"
-          required
-          maxlength="256"
-          pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
-          [(ngModel)]="model.emailAddress"
-          #emailAddressModel="ngModel"
-          #emailAddressEl
-        />
-        <div class="input-group-append">
-          <div class="input-group-text">
-            <span class="fas fa-envelope"></span>
-          </div>
+
+        <!-- Email -->
+        <div class="mb-4 field">
+          <label for="emailAddress" class="font-medium text-900">{{ "EmailAddress" | localize }}</label>
+          <input
+            id="emailAddress"
+            type="email"
+            pInputText
+            class="p-3"
+            name="emailAddress"
+            [placeholder]="'EmailAddress' | localize"
+            required
+            maxlength="256"
+            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+            [(ngModel)]="model.emailAddress"
+            #emailAddressModel="ngModel"
+            #emailAddressEl
+            [ngClass]="{'ng-invalid ng-dirty': emailAddressModel.invalid && (emailAddressModel.dirty || emailAddressModel.touched)}"
+          />
+          <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"></abp-validation-summary>
         </div>
-      </div>
-      <abp-validation-summary
-        [control]="emailAddressModel"
-        [controlEl]="emailAddressEl"
-      ></abp-validation-summary>
-    </div>
-    <div class="form-group">
-      <div class="input-group">
-        <input
-          type="email"
-          class="form-control"
-          name="userName"
-          placeholder=" {{ 'UserName' | localize }}"
-          required
-          maxlength="32"
-          [(ngModel)]="model.userName"
-          #userNameModel="ngModel"
-          #userNameEl
-        />
-        <div class="input-group-append">
-          <div class="input-group-text">
-            <span class="fas fa-user"></span>
-          </div>
+
+        <!-- Username -->
+        <div class="mb-4 field">
+          <label for="userName" class="font-medium text-900">{{ "UserName" | localize }}</label>
+          <input
+            id="userName"
+            type="text"
+            pInputText
+            class="p-3"
+            name="userName"
+            [placeholder]="'UserName' | localize"
+            required
+            maxlength="32"
+            [(ngModel)]="model.userName"
+            #userNameModel="ngModel"
+            #userNameEl
+            [ngClass]="{'ng-invalid ng-dirty': userNameModel.invalid && (userNameModel.dirty || userNameModel.touched)}"
+          />
+          <abp-validation-summary [control]="userNameModel" [controlEl]="userNameEl"></abp-validation-summary>
         </div>
-      </div>
-      <abp-validation-summary
-        [control]="userNameModel"
-        [controlEl]="userNameEl"
-      ></abp-validation-summary>
-    </div>
-    <div class="form-group">
-      <div class="input-group">
-        <input
-          type="password"
-          class="form-control"
-          name="password"
-          placeholder="{{ 'Password' | localize }}"
-          [(ngModel)]="model.password"
-          required
-          maxlength="32"
-          #passwordModel="ngModel"
-          #passwordEl
-        />
-        <div class="input-group-append">
-          <div class="input-group-text">
-            <span class="fas fa-lock"></span>
-          </div>
+
+        <!-- Password -->
+        <div class="mb-5 field">
+          <label for="password" class="font-medium text-900">{{ "Password" | localize }}</label>
+          <p-password
+            id="password"
+            name="password"
+            [(ngModel)]="model.password"
+            [placeholder]="'Password' | localize"
+            required
+            maxlength="32"
+            [feedback]="true"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full p-3"
+            #passwordModel="ngModel"
+            #passwordEl
+          ></p-password>
+          <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
         </div>
-      </div>
-      <abp-validation-summary
-        [control]="passwordModel"
-        [controlEl]="passwordEl"
-      ></abp-validation-summary>
+
+        <!-- Buttons -->
+        <div class="flex gap-3 justify-content-between">
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-arrow-left"
+            [label]="'Back' | localize"
+            class="p-button-outlined p-button-secondary w-full"
+            [routerLink]="['../login']"
+            [disabled]="saving"
+          ></button>
+          
+          <button
+            pButton
+            pRipple
+            type="submit"
+            icon="pi pi-check"
+            [label]="'Register' | localize"
+            class="w-full"
+            [disabled]="!registerForm.form.valid || saving"
+            [loading]="saving"
+          ></button>
+        </div>
+      </form>
     </div>
-    <div class="row">
-      <div class="col-8">
-        <button
-          type="button"
-          class="btn btn-default"
-          [disabled]="saving"
-          [routerLink]="['../login']"
-        >
-          <i class="fa fa-arrow-circle-left"></i> {{ "Back" | localize }}
-        </button>
-      </div>
-      <div class="col-4">
-        <button
-          type="submit"
-          class="btn btn-primary btn-block"
-          [disabled]="!registerForm.form.valid || saving"
-        >
-          {{ "Register" | localize }}
-        </button>
-      </div>
-    </div>
-  </form>
+  </div>
 </div>

@@ -1,6 +1,5 @@
 import { Component, Injector, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   PagedListingComponentBase,
@@ -26,24 +25,27 @@ class PagedRolesRequestDto extends PagedRequestDto {
 })
 export class RolesComponent extends PagedListingComponentBase<RoleDto> {
   @ViewChild('actionMenu') override actionMenu: Menu;
+  @ViewChild('createRoleDialog') createRoleDialog: CreateRoleDialogComponent;
+  @ViewChild('editRoleDialog') editRoleDialog: EditRoleDialogComponent;
+
   roles: RoleDto[] = [];
+  selectedRoles: RoleDto[] = [];
   keyword = '';
 
   constructor(
     injector: Injector,
     private _rolesService: RoleServiceProxy,
-    private _modalService: BsModalService,
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
   }
 
   createRole(): void {
-    this.showCreateOrEditRoleDialog();
+    this.createRoleDialog.show();
   }
 
   editRole(role: RoleDto): void {
-    this.showCreateOrEditRoleDialog(role.id);
+    this.editRoleDialog.show(role.id);
   }
 
   toggleActionMenu(event: Event, role: RoleDto): void {
@@ -101,31 +103,5 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
         }
       }
     );
-  }
-
-  showCreateOrEditRoleDialog(id?: number): void {
-    let createOrEditRoleDialog: BsModalRef;
-    if (!id) {
-      createOrEditRoleDialog = this._modalService.show(
-        CreateRoleDialogComponent,
-        {
-          class: 'modal-lg',
-        }
-      );
-    } else {
-      createOrEditRoleDialog = this._modalService.show(
-        EditRoleDialogComponent,
-        {
-          class: 'modal-lg',
-          initialState: {
-            id: id,
-          },
-        }
-      );
-    }
-
-    createOrEditRoleDialog.content.onSave.subscribe(() => {
-      this.refresh();
-    });
   }
 }

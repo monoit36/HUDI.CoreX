@@ -39,4 +39,10 @@ export class AccountLanguagesComponent extends AppComponentBase
 
     location.reload();
   }
+
+  onLanguageChange(event: any): void {
+    if (event.value && event.value.name !== this.localization.currentLanguage.name) {
+      this.changeLanguage(event.value.name);
+    }
+  }
 }

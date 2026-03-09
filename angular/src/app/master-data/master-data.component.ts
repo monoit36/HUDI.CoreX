@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   PagedListingComponentBase,
@@ -28,7 +27,11 @@ class PagedMasterDataRequestDto extends PagedRequestDto {
 })
 export class MasterDataComponent extends PagedListingComponentBase<MasterDataDictionaryDto> {
   @ViewChild('actionMenu') override actionMenu: Menu;
+  @ViewChild('createDialog') createDialog: CreateMasterDataDialogComponent;
+  @ViewChild('editDialog') editDialog: EditMasterDataDialogComponent;
+
   items: MasterDataDictionaryDto[] = [];
+  selectedItems: MasterDataDictionaryDto[] = [];
   keyword = '';
   categoryCode = '';
   isActive: boolean | null;
@@ -37,18 +40,17 @@ export class MasterDataComponent extends PagedListingComponentBase<MasterDataDic
   constructor(
     injector: Injector,
     private _service: MasterDataDictionaryServiceProxy,
-    private _modalService: BsModalService,
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
   }
 
   createItem(): void {
-    this.showCreateOrEditDialog();
+    this.createDialog.show();
   }
 
   editItem(item: MasterDataDictionaryDto): void {
-    this.showCreateOrEditDialog(item.id);
+    this.editDialog.show(item.id);
   }
 
   toggleActionMenu(event: Event, item: MasterDataDictionaryDto): void {
@@ -101,6 +103,7 @@ export class MasterDataComponent extends PagedListingComponentBase<MasterDataDic
       .subscribe((result: PagedResultDtoOfMasterDataDictionary) => {
         this.items = result.items;
         this.showPaging(result, pageNumber);
+        this.cd.detectChanges();
       });
   }
 
@@ -117,23 +120,5 @@ export class MasterDataComponent extends PagedListingComponentBase<MasterDataDic
         }
       }
     );
-  }
-
-  private showCreateOrEditDialog(id?: number): void {
-    let dialog: BsModalRef;
-    if (!id) {
-      dialog = this._modalService.show(CreateMasterDataDialogComponent, {
-        class: 'modal-lg',
-      });
-    } else {
-      dialog = this._modalService.show(EditMasterDataDialogComponent, {
-        class: 'modal-lg',
-        initialState: { id: id },
-      });
-    }
-
-    dialog.content.onSave.subscribe(() => {
-      this.refresh();
-    });
   }
 }

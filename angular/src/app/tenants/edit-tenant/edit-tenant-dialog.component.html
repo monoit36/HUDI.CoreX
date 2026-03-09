@@ -1,19 +1,10 @@
-<form
-  class="form-horizontal"
-  autocomplete="off"
-  #editTenantForm="ngForm"
-  (ngSubmit)="save()"
->
-  <abp-modal-header
-    [title]="'EditTenant' | localize"
-    (onCloseClick)="bsModalRef.hide()"
-  ></abp-modal-header>
-  <div class="modal-body">
-    <div class="form-group row required">
-      <label class="col-md-3 col-form-label" for="tenancyName">
-        {{ "TenancyName" | localize }}
-      </label>
-      <div class="col-md-9">
+<p-dialog [(visible)]="visible" [style]="{width: '600px', 'max-height': '90vh'}" [header]="'EditTenant' | localize" [modal]="true" (onHide)="hide()">
+  <ng-template pTemplate="content">
+    <form autocomplete="off" #editTenantModal="ngForm" id="editTenantForm" class="p-fluid">
+
+      <!-- Tenancy Name -->
+      <div class="field mt-3">
+        <label for="tenancyName" class="font-medium text-900">{{ "TenancyName" | localize }} <span class="text-red-500">*</span></label>
         <input
           pInputText
           type="text"
@@ -25,19 +16,15 @@
           [(ngModel)]="tenant.tenancyName"
           #tenancyNameModel="ngModel"
           #tenancyNameEl
-          class="w-100"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': tenancyNameModel.invalid && (tenancyNameModel.dirty || tenancyNameModel.touched)}"
         />
-        <abp-validation-summary
-          [control]="tenancyNameModel"
-          [controlEl]="tenancyNameEl"
-        ></abp-validation-summary>
+        <abp-validation-summary [control]="tenancyNameModel" [controlEl]="tenancyNameEl"></abp-validation-summary>
       </div>
-    </div>
-    <div class="form-group row required">
-      <label class="col-md-3 col-form-label" for="name">
-        {{ "Name" | localize }}
-      </label>
-      <div class="col-md-9">
+
+      <!-- Name -->
+      <div class="field">
+        <label for="name" class="font-medium text-900">{{ "Name" | localize }} <span class="text-red-500">*</span></label>
         <input
           pInputText
           type="text"
@@ -48,31 +35,27 @@
           [(ngModel)]="tenant.name"
           #nameModel="ngModel"
           #nameEl
-          class="w-100"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': nameModel.invalid && (nameModel.dirty || nameModel.touched)}"
         />
-        <abp-validation-summary
-          [control]="nameModel"
-          [controlEl]="nameEl"
-        ></abp-validation-summary>
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
       </div>
-    </div>
-    <div class="form-group row mb-0">
-      <label class="col-md-3 col-form-label">
-        {{ "IsActive" | localize }}
-      </label>
-      <div class="col-md-9 d-flex align-items-center">
+
+      <!-- Is Active -->
+      <div class="field-checkbox mt-2">
         <p-checkbox
           name="isActive"
           [(ngModel)]="tenant.isActive"
           [binary]="true"
           inputId="isActive"
         ></p-checkbox>
+        <label for="isActive">{{ "IsActive" | localize }}</label>
       </div>
-    </div>
-  </div>
-  <abp-modal-footer
-    [cancelDisabled]="saving"
-    [saveDisabled]="!editTenantForm.form.valid || saving"
-    (onCancelClick)="bsModalRef.hide()"
-  ></abp-modal-footer>
-</form>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple [label]="'Cancel' | localize" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="hide()" [disabled]="saving"></button>
+    <button pButton pRipple [label]="'Save' | localize" icon="pi pi-check" (click)="save()" [disabled]="editTenantModal && !editTenantModal.valid || saving" [loading]="saving"></button>
+  </ng-template>
+</p-dialog>

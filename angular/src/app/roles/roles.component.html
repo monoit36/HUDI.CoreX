@@ -1,143 +1,103 @@
 <div [@routerTransition]>
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col">
-          <h1 class="mb-0" style="font-size: 1.5rem; font-weight: 600;">{{ "Roles" | localize }}</h1>
-          <small class="text-muted">{{ "TotalRecordsCount" | localize: totalItems }}</small>
-        </div>
-        <div class="col-auto d-flex align-items-center">
-          <span class="badge-count mr-3">
-            <i class="pi pi-circle-fill text-success" style="font-size: 0.5rem; vertical-align: middle;"></i>
-            <span class="ml-1">{{ totalItems }} {{ "Roles" | localize }}</span>
-          </span>
-          <p-button
-            icon="pi pi-plus"
-            [rounded]="true"
-            size="small"
-            (onClick)="createRole()"
-            pTooltip="Create"
-            tooltipPosition="bottom"
-          ></p-button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="content px-2">
-    <div class="container-fluid">
-      <div class="card card-list-page">
-        <!-- Toolbar: Search left, Actions right -->
-        <div class="card-header border-bottom" style="background: #fff;">
-          <div class="d-flex align-items-center justify-content-between flex-wrap">
-            <!-- Search -->
-            <div class="search-input-wrapper">
-              <i class="pi pi-search search-icon"></i>
-              <input
-                pInputText
-                type="text"
-                name="keyword"
-                [placeholder]="'Search' | localize"
-                [(ngModel)]="keyword"
-                (keyup.enter)="getDataPage(1)"
-                class="search-input"
-              />
-            </div>
-            <!-- Right actions -->
-            <div class="d-flex align-items-center">
-              <p-button
-                icon="pi pi-refresh"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                size="small"
-                (onClick)="refresh()"
-                pTooltip="Refresh"
-                tooltipPosition="bottom"
-                class="mr-2"
-              ></p-button>
-              <span class="pagination-info mr-2" style="white-space: nowrap; color: #666;">
-                {{ pageNumber }} of {{ totalPages }}
-              </span>
-              <p-button
-                icon="pi pi-chevron-left"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                [disabled]="pageNumber <= 1"
-                (onClick)="getDataPage(pageNumber - 1)"
-                size="small"
-              ></p-button>
-              <p-button
-                icon="pi pi-chevron-right"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                [disabled]="pageNumber >= totalPages"
-                (onClick)="getDataPage(pageNumber + 1)"
-                size="small"
-              ></p-button>
-            </div>
+  <div class="grid">
+    <div class="col-12">
+      <div class="card px-5 py-5">
+
+        <!-- Header: Title + Create button -->
+        <div class="flex flex-column sm:flex-row justify-content-between align-items-start sm:align-items-center mb-4 gap-3">
+          <div>
+            <h4 class="m-0 text-900 font-bold mb-1">{{ "Roles" | localize }}</h4>
+            <span class="text-500 text-sm block">{{ "TotalRecordsCount" | localize: totalItems }}</span>
+          </div>
+          <div class="flex flex-column sm:flex-row align-items-center gap-3 w-full sm:w-auto">
+            <span class="inline-flex align-items-center gap-2 px-3 py-2 border-round-3xl border-1 surface-border bg-white w-full sm:w-auto justify-content-center">
+              <span class="w-1rem h-1rem border-circle bg-blue-500"></span>
+              <span class="font-medium text-700 text-sm">{{ totalItems }} Total Roles</span>
+            </span>
+            <button pButton pRipple icon="pi pi-plus" [label]="'CreateNewRole' | localize" class="p-button-success w-full sm:w-auto"
+              (click)="createRole()"></button>
           </div>
         </div>
-        <!-- Table -->
-        <div class="card-body p-0">
-          <p-table
-            [value]="roles | paginate: {
-              id: 'server',
-              itemsPerPage: pageSize,
-              currentPage: pageNumber,
-              totalItems: totalItems
-            }"
-            [tableStyle]="{ 'min-width': '40rem' }"
-            styleClass="p-datatable-sm list-table"
-            [loading]="isTableLoading"
-            [rowHover]="true"
-          >
-            <ng-template pTemplate="header">
-              <tr>
-                <th style="width: 3rem;"></th>
-                <th>{{ "RoleName" | localize }}</th>
-                <th>{{ "DisplayName" | localize }}</th>
-                <th style="width: 60px; text-align: center;"></th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-role>
-              <tr>
-                <td>
-                  <p-checkbox [binary]="true" [ngModel]="false" [name]="'select_' + role.id"></p-checkbox>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="row-avatar" [style.background-color]="getAvatarColor(role.name)">
-                      {{ getInitials(role.name) }}
-                    </div>
-                    <span class="ml-2 font-weight-bold" style="color: #333;">{{ role.name }}</span>
-                  </div>
-                </td>
-                <td style="color: #555;">{{ role.displayName }}</td>
-                <td style="text-align: center;">
-                  <p-button
-                    icon="pi pi-ellipsis-v"
-                    [rounded]="true"
-                    [text]="true"
-                    severity="secondary"
-                    (onClick)="toggleActionMenu($event, role)"
-                  ></p-button>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="4" class="text-center" style="padding: 2rem;">
-                  <i class="pi pi-shield" style="font-size: 2rem; color: #ccc;"></i>
-                  <p class="mt-2 text-muted">{{ "NoData" | localize }}</p>
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
+
+        <!-- Control bar: Search + Refresh + Pagination -->
+        <div class="flex flex-column sm:flex-row align-items-center justify-content-between mb-4 pb-4 border-bottom-1 surface-border gap-3">
+          <div class="w-full sm:w-auto">
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)"
+                [placeholder]="'Search' | localize" class="w-full sm:w-16rem" />
+            </span>
+          </div>
+          <div class="flex align-items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+            <p-button icon="pi pi-refresh" [outlined]="true" severity="secondary" (onClick)="refresh()"
+              pTooltip="Refresh" tooltipPosition="bottom"></p-button>
+            
+            <span class="text-700 text-sm white-space-nowrap border-1 surface-border border-round px-3 py-2 font-medium flex align-items-center justify-content-center" style="height: 40px;">
+              {{ pageNumber }} of {{ totalPages }}
+            </span>
+            
+            <p-button icon="pi pi-chevron-left" [outlined]="true" severity="secondary" [disabled]="pageNumber <= 1"
+              (onClick)="getDataPage(pageNumber - 1)"></p-button>
+            <p-button icon="pi pi-chevron-right" [outlined]="true" severity="secondary"
+              [disabled]="pageNumber >= totalPages" (onClick)="getDataPage(pageNumber + 1)"></p-button>
+          </div>
         </div>
+
+        <!-- Table -->
+        <p-table [value]="roles | paginate: {
+            id: 'server',
+            itemsPerPage: pageSize,
+            currentPage: pageNumber,
+            totalItems: totalItems
+          }" responsiveLayout="scroll" [rows]="pageSize" [rowHover]="true" dataKey="id" [loading]="isTableLoading"
+          styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="name">{{ "RoleName" | localize }} <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="displayName">{{ "DisplayName" | localize }} <p-sortIcon
+                  field="displayName"></p-sortIcon></th>
+              <th style="width: 4rem"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-role>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="role"></p-tableCheckbox>
+              </td>
+              <td>
+                <div class="flex align-items-center gap-2">
+                  <div class="row-avatar" [style.background-color]="getAvatarColor(role.name)">
+                    {{ getInitials(role.name) }}
+                  </div>
+                  <span class="font-medium text-900">{{ role.name }}</span>
+                </div>
+              </td>
+              <td>{{ role.displayName }}</td>
+              <td class="text-center">
+                <p-button icon="pi pi-ellipsis-h" [text]="true" severity="secondary"
+                  (onClick)="toggleActionMenu($event, role)"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" class="text-center p-5">
+                <i class="pi pi-shield text-400" style="font-size: 2rem;"></i>
+                <p class="mt-2 text-500">{{ "NoData" | localize }}</p>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
       </div>
     </div>
-  </section>
+  </div>
+
   <p-menu #actionMenu [model]="actionMenuItems" [popup]="true" appendTo="body"></p-menu>
+
+  <app-create-role-dialog #createRoleDialog (onSave)="refresh()"></app-create-role-dialog>
+  <app-edit-role-dialog #editRoleDialog (onSave)="refresh()"></app-edit-role-dialog>
 </div>

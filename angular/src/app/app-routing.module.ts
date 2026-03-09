@@ -49,6 +49,27 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
                         canActivate: [AppRouteGuard]
                     },
+                    // Sakai Demo Routes
+                    {
+                        path: 'uikit',
+                        loadChildren: () => import('./demo/components/uikit/uikit.module').then((m) => m.UIkitModule),
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'utilities',
+                        loadChildren: () => import('./demo/components/utilities/utilities.module').then((m) => m.UtilitiesModule),
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'blocks',
+                        loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then((m) => m.PrimeBlocksModule),
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'pages',
+                        loadChildren: () => import('./demo/components/pages/pages.module').then((m) => m.PagesModule),
+                        canActivate: [AppRouteGuard]
+                    }
                 ]
             }
         ])

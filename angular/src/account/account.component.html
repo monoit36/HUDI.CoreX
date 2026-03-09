@@ -1,17 +1,13 @@
-﻿<div class="login-box">
-  <account-header></account-header>
-  <div class="card">
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden relative">
+
+  <!-- Absolute positioning for tenant change and languages at top center -->
+  <div class="absolute top-0 w-full p-4 flex justify-content-center align-items-center gap-4 z-5">
     @if (showTenantChange()) {
-      <div class="card-header">
-        <tenant-change></tenant-change>
-      </div>
+      <tenant-change></tenant-change>
     }
-    <div class="card-body login-card-body">
-      <router-outlet></router-outlet>
-    </div>
-    <div class="card-footer">
-      <account-languages></account-languages>
-    </div>
+    <account-languages></account-languages>
   </div>
-  <account-footer></account-footer>
+
+  <router-outlet></router-outlet>
+
 </div>

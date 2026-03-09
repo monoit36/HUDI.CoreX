@@ -1,19 +1,26 @@
-﻿<div class="text-center">
-  @for (language of languages; track language) {
-    @if (language.name != currentLanguage.name) {
-      <a
-        href="javascript:void(0);"
-        (click)="changeLanguage(language.name)"
-        >
-        <span
-          title="{{ language.displayName }}"
-        [attr.class.current-language-icon]="
-          language.name != currentLanguage.name
-        "
-          >
-          <i class="d-inline-block mx-1 {{ language.icon }}"></i>
-        </span>
-      </a>
-    }
-  }
+<div class="flex align-items-center">
+  <p-dropdown
+    [options]="languages"
+    [(ngModel)]="currentLanguage"
+    optionLabel="displayName"
+    [filter]="false"
+    [showClear]="false"
+    (onChange)="onLanguageChange($event)"
+    styleClass="border-none bg-transparent"
+    panelStyleClass="p-2"
+  >
+    <ng-template pTemplate="selectedItem">
+      <div class="flex align-items-center gap-2 text-700 hover:text-900 transition-colors transition-duration-200" *ngIf="currentLanguage">
+        <i class="{{ currentLanguage.icon }} text-xl"></i>
+        <span class="font-medium dis-none sm:inline">{{ currentLanguage.displayName }}</span>
+        <i class="pi pi-angle-down ml-1"></i>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="item" let-language>
+      <div class="flex align-items-center gap-2 p-2 border-round hover:surface-hover transition-colors transition-duration-200">
+        <i class="{{ language.icon }} text-xl text-primary"></i>
+        <span class="font-medium text-700">{{ language.displayName }}</span>
+      </div>
+    </ng-template>
+  </p-dropdown>
 </div>

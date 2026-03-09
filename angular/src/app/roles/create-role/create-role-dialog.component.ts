@@ -3,10 +3,11 @@ import {
   Injector,
   OnInit,
   EventEmitter,
-  output,
+  Output,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   RoleServiceProxy,
@@ -18,21 +19,22 @@ import {
 import { TreeNode } from 'primeng/api';
 
 @Component({
+  selector: 'app-create-role-dialog',
   templateUrl: 'create-role-dialog.component.html'
 })
-export class CreateRoleDialogComponent extends AppComponentBase
-  implements OnInit {
+export class CreateRoleDialogComponent extends AppComponentBase implements OnInit {
   saving = false;
   role = new RoleDto();
   permissionNodes: TreeNode[] = [];
   selectedPermissions: TreeNode[] = [];
+  visible = false;
+  @ViewChild('createRoleModal') createRoleModal: NgForm;
 
-  onSave = output<EventEmitter<any>>()
+  @Output() onSave = new EventEmitter<any>();
 
   constructor(
     injector: Injector,
     private _roleService: RoleServiceProxy,
-    public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef
   ) {
     super(injector);
@@ -43,10 +45,20 @@ export class CreateRoleDialogComponent extends AppComponentBase
       .getPermissionTree()
       .subscribe((result: PermissionTreeDtoTreeResultDto) => {
         this.permissionNodes = this.mapToTreeNodes(result.items);
-        // Default: select all
         this.selectedPermissions = this.getAllTreeNodes(this.permissionNodes);
         this.cd.detectChanges();
       });
+  }
+
+  show(): void {
+    this.saving = false;
+    this.role = new RoleDto();
+    this.selectedPermissions = this.getAllTreeNodes(this.permissionNodes);
+    this.visible = true;
+  }
+
+  hide(): void {
+    this.visible = false;
   }
 
   private mapToTreeNodes(permissions: PermissionTreeDto[]): TreeNode[] {
@@ -73,17 +85,12 @@ export class CreateRoleDialogComponent extends AppComponentBase
 
   getCheckedPermissions(): string[] {
     const permissions: string[] = [];
-
-    // Include fully selected nodes
     for (const node of this.selectedPermissions) {
       if (node.data) {
         permissions.push(node.data);
       }
     }
-
-    // Include partially selected parent nodes
     this.collectPartiallySelected(this.permissionNodes, permissions);
-
     return [...new Set(permissions)];
   }
 
@@ -110,7 +117,7 @@ export class CreateRoleDialogComponent extends AppComponentBase
       .subscribe(
         () => {
           this.notify.info(this.l('SavedSuccessfully'));
-          this.bsModalRef.hide();
+          this.hide();
           this.onSave.emit(null);
         },
         () => {

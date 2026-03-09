@@ -5,8 +5,9 @@ import {
   EventEmitter,
   Output,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   RoleServiceProxy,
@@ -20,29 +21,36 @@ import { TreeNode } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 
 @Component({
+  selector: 'app-edit-role-dialog',
   templateUrl: 'edit-role-dialog.component.html'
 })
-export class EditRoleDialogComponent extends AppComponentBase
-  implements OnInit {
+export class EditRoleDialogComponent extends AppComponentBase implements OnInit {
   saving = false;
   id: number;
   role = new RoleEditDto();
   permissionNodes: TreeNode[] = [];
   selectedPermissions: TreeNode[] = [];
   grantedPermissionNames: string[] = [];
+  visible = false;
+  @ViewChild('editRoleModal') editRoleModal: NgForm;
 
   @Output() onSave = new EventEmitter<any>();
 
   constructor(
     injector: Injector,
     private _roleService: RoleServiceProxy,
-    public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef
   ) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  show(id: number): void {
+    this.saving = false;
+    this.id = id;
+    this.visible = true;
+
     forkJoin([
       this._roleService.getRoleForEdit(this.id),
       this._roleService.getPermissionTree()
@@ -53,6 +61,10 @@ export class EditRoleDialogComponent extends AppComponentBase
       this.selectedPermissions = this.getSelectedNodes(this.permissionNodes, this.grantedPermissionNames);
       this.cd.detectChanges();
     });
+  }
+
+  hide(): void {
+    this.visible = false;
   }
 
   private mapToTreeNodes(permissions: PermissionTreeDto[]): TreeNode[] {
@@ -72,7 +84,6 @@ export class EditRoleDialogComponent extends AppComponentBase
       if (node.children && node.children.length > 0) {
         const childSelected = this.getSelectedNodes(node.children, grantedNames);
         selected = selected.concat(childSelected);
-        // Only add parent to selection if ALL children are selected (fully checked)
         const allLeaves = this.getAllLeafNodes(node.children);
         const selectedLeaves = allLeaves.filter(l => grantedNames.includes(l.data));
         if (selectedLeaves.length === allLeaves.length) {
@@ -101,17 +112,12 @@ export class EditRoleDialogComponent extends AppComponentBase
 
   getCheckedPermissions(): string[] {
     const permissions: string[] = [];
-
-    // Include fully selected nodes
     for (const node of this.selectedPermissions) {
       if (node.data) {
         permissions.push(node.data);
       }
     }
-
-    // Include partially selected parent nodes
     this.collectPartiallySelected(this.permissionNodes, permissions);
-
     return [...new Set(permissions)];
   }
 
@@ -136,11 +142,12 @@ export class EditRoleDialogComponent extends AppComponentBase
     this._roleService.update(role).subscribe(
       () => {
         this.notify.info(this.l('SavedSuccessfully'));
-        this.bsModalRef.hide();
+        this.hide();
         this.onSave.emit();
       },
       () => {
         this.saving = false;
+        this.cd.detectChanges();
       }
     );
   }

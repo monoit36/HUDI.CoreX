@@ -1,19 +1,10 @@
-<form
-  class="form-horizontal"
-  autocomplete="off"
-  #createTenantForm="ngForm"
-  (ngSubmit)="save()"
->
-  <abp-modal-header
-    [title]="'CreateNewTenant' | localize"
-    (onCloseClick)="bsModalRef.hide()"
-  ></abp-modal-header>
-  <div class="modal-body">
-    <div class="form-group row required">
-      <label class="col-md-3 col-form-label" for="tenancyName">
-        {{ "TenancyName" | localize }}
-      </label>
-      <div class="col-md-9">
+<p-dialog [(visible)]="visible" [style]="{width: '600px', 'max-height': '90vh'}" [header]="'CreateNewTenant' | localize" [modal]="true" (onHide)="hide()">
+  <ng-template pTemplate="content">
+    <form autocomplete="off" #createTenantModal="ngForm" id="createTenantForm" class="p-fluid">
+
+      <!-- Tenancy Name -->
+      <div class="field mt-3">
+        <label for="tenancyName" class="font-medium text-900">{{ "TenancyName" | localize }} <span class="text-red-500">*</span></label>
         <input
           pInputText
           type="text"
@@ -25,19 +16,15 @@
           [(ngModel)]="tenant.tenancyName"
           #tenancyNameModel="ngModel"
           #tenancyNameEl
-          class="w-100"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': tenancyNameModel.invalid && (tenancyNameModel.dirty || tenancyNameModel.touched)}"
         />
-        <abp-validation-summary
-          [control]="tenancyNameModel"
-          [controlEl]="tenancyNameEl"
-        ></abp-validation-summary>
+        <abp-validation-summary [control]="tenancyNameModel" [controlEl]="tenancyNameEl"></abp-validation-summary>
       </div>
-    </div>
-    <div class="form-group row required">
-      <label class="col-md-3 col-form-label" for="name">
-        {{ "Name" | localize }}
-      </label>
-      <div class="col-md-9">
+
+      <!-- Name -->
+      <div class="field">
+        <label for="name" class="font-medium text-900">{{ "Name" | localize }} <span class="text-red-500">*</span></label>
         <input
           pInputText
           type="text"
@@ -48,19 +35,15 @@
           [(ngModel)]="tenant.name"
           #nameModel="ngModel"
           #nameEl
-          class="w-100"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': nameModel.invalid && (nameModel.dirty || nameModel.touched)}"
         />
-        <abp-validation-summary
-          [control]="nameModel"
-          [controlEl]="nameEl"
-        ></abp-validation-summary>
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
       </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-md-3 col-form-label" for="connectionString">
-        {{ "DatabaseConnectionString" | localize }}
-      </label>
-      <div class="col-md-9">
+
+      <!-- Connection String -->
+      <div class="field">
+        <label for="connectionString" class="font-medium text-900">{{ "DatabaseConnectionString" | localize }}</label>
         <input
           pInputText
           type="text"
@@ -68,15 +51,13 @@
           id="connectionString"
           maxlength="1024"
           [(ngModel)]="tenant.connectionString"
-          class="w-100"
+          class="w-full"
         />
       </div>
-    </div>
-    <div class="form-group row required">
-      <label class="col-md-3 col-form-label" for="adminEmailAddress">
-        {{ "AdminEmailAddress" | localize }}
-      </label>
-      <div class="col-md-9">
+
+      <!-- Admin Email -->
+      <div class="field">
+        <label for="adminEmailAddress" class="font-medium text-900">{{ "AdminEmailAddress" | localize }} <span class="text-red-500">*</span></label>
         <input
           pInputText
           type="email"
@@ -88,34 +69,30 @@
           [(ngModel)]="tenant.adminEmailAddress"
           #adminEmailAddressModel="ngModel"
           #adminEmailAddressEl
-          class="w-100"
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': adminEmailAddressModel.invalid && (adminEmailAddressModel.dirty || adminEmailAddressModel.touched)}"
         />
-        <abp-validation-summary
-          [control]="adminEmailAddressModel"
-          [controlEl]="adminEmailAddressEl"
-        ></abp-validation-summary>
+        <abp-validation-summary [control]="adminEmailAddressModel" [controlEl]="adminEmailAddressEl"></abp-validation-summary>
       </div>
-    </div>
-    <div class="form-group row mb-0">
-      <label class="col-md-3 col-form-label">
-        {{ "IsActive" | localize }}
-      </label>
-      <div class="col-md-9 d-flex align-items-center">
+
+      <!-- Is Active -->
+      <div class="field-checkbox mt-2">
         <p-checkbox
           name="isActive"
           [(ngModel)]="tenant.isActive"
           [binary]="true"
           inputId="isActive"
         ></p-checkbox>
+        <label for="isActive">{{ "IsActive" | localize }}</label>
       </div>
-    </div>
-    <p class="text-center text-info mb-0 mt-2">
-      {{ "DefaultPasswordIs" | localize: "123qwe" }}
-    </p>
-  </div>
-  <abp-modal-footer
-    [cancelDisabled]="saving"
-    [saveDisabled]="!createTenantForm.form.valid || saving"
-    (onCancelClick)="bsModalRef.hide()"
-  ></abp-modal-footer>
-</form>
+
+      <p class="text-center text-primary text-sm mb-0 mt-2">
+        {{ "DefaultPasswordIs" | localize: "123qwe" }}
+      </p>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple [label]="'Cancel' | localize" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="hide()" [disabled]="saving"></button>
+    <button pButton pRipple [label]="'Save' | localize" icon="pi pi-check" (click)="save()" [disabled]="createTenantModal && !createTenantModal.valid || saving" [loading]="saving"></button>
+  </ng-template>
+</p-dialog>

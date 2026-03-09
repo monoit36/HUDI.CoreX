@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import {
   PagedListingComponentBase,
@@ -27,7 +26,11 @@ class PagedTenantsRequestDto extends PagedRequestDto {
 })
 export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
   @ViewChild('actionMenu') override actionMenu: Menu;
+  @ViewChild('createTenantDialog') createTenantDialog: CreateTenantDialogComponent;
+  @ViewChild('editTenantDialog') editTenantDialog: EditTenantDialogComponent;
+
   tenants: TenantDto[] = [];
+  selectedTenants: TenantDto[] = [];
   keyword = '';
   isActive: boolean | null;
   advancedFiltersVisible = false;
@@ -35,18 +38,17 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
   constructor(
     injector: Injector,
     private _tenantService: TenantServiceProxy,
-    private _modalService: BsModalService,
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
   }
 
   createTenant(): void {
-    this.showCreateOrEditTenantDialog();
+    this.createTenantDialog.show();
   }
 
   editTenant(tenant: TenantDto): void {
-    this.showCreateOrEditTenantDialog(tenant.id);
+    this.editTenantDialog.show(tenant.id);
   }
 
   toggleActionMenu(event: Event, tenant: TenantDto): void {
@@ -94,6 +96,7 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
       .subscribe((result: TenantDtoPagedResultDto) => {
         this.tenants = result.items;
         this.showPaging(result, pageNumber);
+        this.cd.detectChanges();
       });
   }
 
@@ -115,31 +118,5 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
         }
       }
     );
-  }
-
-  showCreateOrEditTenantDialog(id?: number): void {
-    let createOrEditTenantDialog: BsModalRef;
-    if (!id) {
-      createOrEditTenantDialog = this._modalService.show(
-        CreateTenantDialogComponent,
-        {
-          class: 'modal-lg',
-        }
-      );
-    } else {
-      createOrEditTenantDialog = this._modalService.show(
-        EditTenantDialogComponent,
-        {
-          class: 'modal-lg',
-          initialState: {
-            id: id,
-          },
-        }
-      );
-    }
-
-    createOrEditTenantDialog.content.onSave.subscribe(() => {
-      this.refresh();
-    });
   }
 }

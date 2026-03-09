@@ -18,6 +18,14 @@ import { AccountFooterComponent } from './layout/account-footer.component';
 import { TenantChangeComponent } from './tenant/tenant-change.component';
 import { TenantChangeDialogComponent } from './tenant/tenant-change-dialog.component';
 
+// PrimeNG
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { DropdownModule } from 'primeng/dropdown';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -27,7 +35,13 @@ import { TenantChangeDialogComponent } from './tenant/tenant-change-dialog.compo
         SharedModule,
         ServiceProxyModule,
         AccountRoutingModule,
-        ModalModule.forChild()
+        ModalModule.forChild(),
+        InputTextModule,
+        PasswordModule,
+        CheckboxModule,
+        ButtonModule,
+        RippleModule,
+        DropdownModule
     ],
     declarations: [
         AccountComponent,
