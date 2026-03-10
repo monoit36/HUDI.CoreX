@@ -1,20 +1,19 @@
 # ============================================================
 # Stage 1 – Restore (cache NuGet packages layer)
-# Build context must be the aspnet-core/ solution root:
-#   docker build -f src/HUDI.CoreX.Web.Host/Dockerfile .
 # ============================================================
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
 
 WORKDIR /src
 
-# Copy project files first to cache the restore layer
-COPY ["src/HUDI.CoreX.Web.Host/HUDI.CoreX.Web.Host.csproj",              "src/HUDI.CoreX.Web.Host/"]
-COPY ["src/HUDI.CoreX.Web.Core/HUDI.CoreX.Web.Core.csproj",              "src/HUDI.CoreX.Web.Core/"]
-COPY ["src/HUDI.CoreX.Application/HUDI.CoreX.Application.csproj",        "src/HUDI.CoreX.Application/"]
-COPY ["src/HUDI.CoreX.Core/HUDI.CoreX.Core.csproj",                      "src/HUDI.CoreX.Core/"]
+# Copy only project files first to leverage Docker layer caching
+COPY ["src/HUDI.CoreX.Web.Host/HUDI.CoreX.Web.Host.csproj",         "src/HUDI.CoreX.Web.Host/"]
+COPY ["src/HUDI.CoreX.Web.Core/HUDI.CoreX.Web.Core.csproj",         "src/HUDI.CoreX.Web.Core/"]
+COPY ["src/HUDI.CoreX.Application/HUDI.CoreX.Application.csproj",   "src/HUDI.CoreX.Application/"]
+COPY ["src/HUDI.CoreX.Core/HUDI.CoreX.Core.csproj",                 "src/HUDI.CoreX.Core/"]
 COPY ["src/HUDI.CoreX.EntityFrameworkCore/HUDI.CoreX.EntityFrameworkCore.csproj", \
-                                                                          "src/HUDI.CoreX.EntityFrameworkCore/"]
-COPY ["Module/HUDI.CoreX.Module.Master/HUDI.CoreX.Module.Master.csproj", "Module/HUDI.CoreX.Module.Master/"]
+                                                                     "src/HUDI.CoreX.EntityFrameworkCore/"]
+COPY ["Module/HUDI.CoreX.Module.Master/HUDI.CoreX.Module.Master.csproj", \
+                                                                     "Module/HUDI.CoreX.Module.Master/"]
 
 RUN dotnet restore "src/HUDI.CoreX.Web.Host/HUDI.CoreX.Web.Host.csproj"
 
@@ -23,8 +22,9 @@ RUN dotnet restore "src/HUDI.CoreX.Web.Host/HUDI.CoreX.Web.Host.csproj"
 # ============================================================
 FROM restore AS publish
 
-COPY src/    src/
-COPY Module/ Module/
+# Copy all source files
+COPY src/      src/
+COPY Module/   Module/
 
 RUN dotnet publish "src/HUDI.CoreX.Web.Host/HUDI.CoreX.Web.Host.csproj" \
     -c Release \
@@ -36,6 +36,7 @@ RUN dotnet publish "src/HUDI.CoreX.Web.Host/HUDI.CoreX.Web.Host.csproj" \
 # ============================================================
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
+# Install cultures / timezone data
 RUN apt-get update && apt-get install -y --no-install-recommends \
         tzdata \
     && rm -rf /var/lib/apt/lists/*

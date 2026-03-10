@@ -1,0 +1,49 @@
+services:
+  corex-api:
+    image: hudi-corex:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: corex-api
+    restart: unless-stopped
+    ports:
+      - "5000:80"
+    environment:
+      # ASP.NET Core
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:80
+      DOTNET_RUNNING_IN_CONTAINER: "true"
+      TZ: Asia/Ho_Chi_Minh
+
+      # Connection strings — override appsettings.json at runtime
+      ConnectionStrings__Default: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
+      ConnectionStrings__Master: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
+
+      # App
+      App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-http://localhost:5000/}"
+      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4200/}"
+      App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:3000}"
+
+      # JWT
+      Authentication__JwtBearer__IsEnabled: "true"
+      Authentication__JwtBearer__SecurityKey: "${JWT_SECURITY_KEY:-CoreX_7058702A25A940B0ABB676E3EF4D6C4D}"
+      Authentication__JwtBearer__Issuer: "${JWT_ISSUER:-CoreX}"
+      Authentication__JwtBearer__Audience: "${JWT_AUDIENCE:-CoreX}"
+    volumes:
+      - corex-logs:/app/Logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - corex-net
+
+volumes:
+  corex-logs:
+    driver: local
+
+networks:
+  corex-net:
+    driver: bridge

@@ -10,3 +10,6 @@ aspnet-core/src/HUDI.CoreX.Migrator/Logs/Logs.txt
 aspnet-core/build/outputs/
 aspnet-core/docker/mvc/Mvc-Logs/
 
+
+# Docker environment secrets
+aspnet-core/.env
