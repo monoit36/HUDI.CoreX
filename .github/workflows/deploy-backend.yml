@@ -15,15 +15,23 @@ jobs:
       # 1. THÔNG BÁO BẮT ĐẦU DEPLOY
       # ==========================================
       - name: 🚀 Thông báo Telegram (Bắt đầu)
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            ⏳ TIẾN TRÌNH DEPLOY BACKEND BẮT ĐẦU...
-            👤 Người push code: ${{ github.actor }}
-            🌿 Nhánh: ${{ github.ref_name }}
-            📝 Nội dung commit: ${{ github.event.head_commit.message }}
+        run: |
+          $Message = @"
+          ⏳ TIẾN TRÌNH DEPLOY BACKEND BẮT ĐẦU...
+          👤 Người push code: ${{ github.actor }}
+          🌿 Nhánh: ${{ github.ref_name }}
+          📝 Nội dung commit: ${{ github.event.head_commit.message }}
+          "@
+          
+          # URL Encode message
+          $EncodedMessage = [uri]::EscapeDataString($Message)
+          $BotToken = "${{ secrets.TELEGRAM_BOT_TOKEN }}"
+          $ChatId = "${{ secrets.TELEGRAM_CHAT_ID }}"
+          
+          Invoke-RestMethod -Uri "https://api.telegram.org/bot$BotToken/sendMessage" -Method Post -Body @{
+            chat_id = $ChatId
+            text = $Message
+          }
 
       # ==========================================
       # 2. CÁC BƯỚC THỰC THI CHÍNH
@@ -41,12 +49,19 @@ jobs:
       # 3. THÔNG BÁO KẾT THÚC DEPLOY
       # ==========================================
       - name: 🏁 Thông báo Telegram (Kết thúc)
-        uses: appleboy/telegram-action@master
         if: always() # Dòng này CỰC KỲ QUAN TRỌNG: Đảm bảo luôn gửi tin nhắn dù bước Build ở trên có bị lỗi hay thành công
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            Trạng thái Deploy Backend: ${{ job.status == 'success' && '✅ THÀNH CÔNG' || '❌ THẤT BẠI' }}
-            🖥️ Repository: ${{ github.repository }}
-            🔗 Xem chi tiết log tại tab Actions trên GitHub.
+        run: |
+          $StatusText = if ("${{ job.status }}" -eq "success") { "✅ THÀNH CÔNG" } else { "❌ THẤT BẠI" }
+          $Message = @"
+          Trạng thái Deploy Backend: $StatusText
+          🖥️ Repository: ${{ github.repository }}
+          🔗 Xem chi tiết log tại tab Actions trên GitHub.
+          "@
+          
+          $BotToken = "${{ secrets.TELEGRAM_BOT_TOKEN }}"
+          $ChatId = "${{ secrets.TELEGRAM_CHAT_ID }}"
+          
+          Invoke-RestMethod -Uri "https://api.telegram.org/bot$BotToken/sendMessage" -Method Post -Body @{
+            chat_id = $ChatId
+            text = $Message
+          }
