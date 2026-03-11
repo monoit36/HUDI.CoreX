@@ -14,7 +14,6 @@ services:
       ASPNETCORE_URLS: http://+:80
       DOTNET_RUNNING_IN_CONTAINER: "true"
       TZ: Asia/Ho_Chi_Minh
-      DOTNET_GENERATE_ASPNET_CERTIFICATE=false # Thêm dòng này để chặn tự tạo cert
 
       # Connection strings � override appsettings.json at runtime
       ConnectionStrings__Default: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
