@@ -11,7 +11,7 @@ HUDI.CoreX/
 │   └── Module/            # Các module độc lập
 └── angular/               # Frontend Angular 18
 ```
-
+  
 ---
 
 ## 2. Kiến Trúc Backend (N-tier)
