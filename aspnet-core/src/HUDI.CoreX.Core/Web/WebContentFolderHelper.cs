@@ -41,8 +41,7 @@ namespace HUDI.CoreX.Web
             {
                 return webHostFolder;
             }
-
-            throw new Exception("Could not find root folder of the web project!");
+            return coreAssemblyDirectoryPath;
         }
 
         private static bool DirectoryContains(string directory, string fileName)
