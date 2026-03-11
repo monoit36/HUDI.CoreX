@@ -12,15 +12,15 @@ jobs:
     runs-on: self-hosted 
     steps:
       # ==========================================
-      # 1. THÔNG BÁO BẮT ĐẦU DEPLOY
+      # 1. NOTIFY DEPLOYMENT START
       # ==========================================
-      - name: 🚀 Thông báo Telegram (Bắt đầu)
+      - name: 🚀 Telegram Notification (Start)
         run: |
           $Message = @"
-          ⏳ TIẾN TRÌNH DEPLOY BACKEND BẮT ĐẦU...
-          👤 Người push code: ${{ github.actor }}
-          🌿 Nhánh: ${{ github.ref_name }}
-          📝 Nội dung commit: ${{ github.event.head_commit.message }}
+          ⏳ BACKEND DEPLOYMENT STARTED...
+          👤 Pushed by: ${{ github.actor }}
+          🌿 Branch: ${{ github.ref_name }}
+          📝 Commit message: ${{ github.event.head_commit.message }}
           "@
           
           # URL Encode message
@@ -39,33 +39,33 @@ jobs:
           }
 
       # ==========================================
-      # 2. CÁC BƯỚC THỰC THI CHÍNH
+      # 2. MAIN EXECUTION STEPS
       # ==========================================
-      - name: Kéo code mới nhất từ GitHub
+      - name: Checkout latest code
         uses: actions/checkout@v4
 
-      - name: Build và chạy ứng dụng bằng Docker Compose
+      - name: Build and run via Docker Compose
         run: docker-compose up -d --build
         
-      - name: Dọn dẹp Image rác
+      - name: Prune dangling images
         run: docker image prune -f
 
       # ==========================================
-      # 3. THÔNG BÁO KẾT THÚC DEPLOY
+      # 3. NOTIFY DEPLOYMENT END
       # ==========================================
-      - name: 🏁 Thông báo Telegram (Kết thúc)
-        if: always() # Dòng này CỰC KỲ QUAN TRỌNG: Đảm bảo luôn gửi tin nhắn dù bước Build ở trên có bị lỗi hay thành công
+      - name: 🏁 Telegram Notification (End)
+        if: always() # CRITICAL: Ensure notification is sent even if the Build step fails
         run: |
           if ('${{ job.status }}' -eq 'success') {
-            $StatusText = '✅ THÀNH CÔNG'
+            $StatusText = '✅ SUCCESS'
           } else {
-            $StatusText = '❌ THẤT BẠI'
+            $StatusText = '❌ FAILED'
           }
           
           $Message = @"
-          Trạng thái Deploy Backend: $StatusText
+          Backend Deployment Status: $StatusText
           🖥️ Repository: ${{ github.repository }}
-          🔗 Xem chi tiết log tại tab Actions trên GitHub.
+          🔗 View detailed logs in the Actions tab on GitHub.
           "@
           
           $BotToken = '${{ secrets.TELEGRAM_BOT_TOKEN }}'

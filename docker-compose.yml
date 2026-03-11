@@ -19,7 +19,7 @@ services:
       ConnectionStrings__Default: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
       ConnectionStrings__Master: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
 
-      # App
+      # App v
       App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-http://localhost:5000/}"
       App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4200/}"
       App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:3000}"
