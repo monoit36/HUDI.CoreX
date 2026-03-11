@@ -28,7 +28,12 @@ jobs:
           $BotToken = "${{ secrets.TELEGRAM_BOT_TOKEN }}"
           $ChatId = "${{ secrets.TELEGRAM_CHAT_ID }}"
           
-          Invoke-RestMethod -Uri "https://api.telegram.org/bot$BotToken/sendMessage" -Method Post -Body @{
+          if ([string]::IsNullOrWhiteSpace($BotToken) -or [string]::IsNullOrWhiteSpace($ChatId)) {
+            Write-Host "LỖI: TELEGRAM_BOT_TOKEN hoặc TELEGRAM_CHAT_ID chưa được cấp trong GitHub Secrets!"
+            exit 1
+          }
+          
+          Invoke-RestMethod -Uri "https://api.telegram.org/bot${BotToken}/sendMessage" -Method Post -Body @{
             chat_id = $ChatId
             text = $Message
           }
@@ -51,17 +56,27 @@ jobs:
       - name: 🏁 Thông báo Telegram (Kết thúc)
         if: always() # Dòng này CỰC KỲ QUAN TRỌNG: Đảm bảo luôn gửi tin nhắn dù bước Build ở trên có bị lỗi hay thành công
         run: |
-          $StatusText = if ("${{ job.status }}" -eq "success") { "✅ THÀNH CÔNG" } else { "❌ THẤT BẠI" }
+          if ('${{ job.status }}' -eq 'success') {
+            $StatusText = '✅ THÀNH CÔNG'
+          } else {
+            $StatusText = '❌ THẤT BẠI'
+          }
+          
           $Message = @"
           Trạng thái Deploy Backend: $StatusText
           🖥️ Repository: ${{ github.repository }}
           🔗 Xem chi tiết log tại tab Actions trên GitHub.
           "@
           
-          $BotToken = "${{ secrets.TELEGRAM_BOT_TOKEN }}"
-          $ChatId = "${{ secrets.TELEGRAM_CHAT_ID }}"
+          $BotToken = '${{ secrets.TELEGRAM_BOT_TOKEN }}'
+          $ChatId = '${{ secrets.TELEGRAM_CHAT_ID }}'
           
-          Invoke-RestMethod -Uri "https://api.telegram.org/bot$BotToken/sendMessage" -Method Post -Body @{
+          if ([string]::IsNullOrWhiteSpace($BotToken) -or [string]::IsNullOrWhiteSpace($ChatId)) {
+            Write-Host "LỖI: TELEGRAM_BOT_TOKEN hoặc TELEGRAM_CHAT_ID chưa được cấp trong GitHub Secrets!"
+            exit 1
+          }
+          
+          Invoke-RestMethod -Uri "https://api.telegram.org/bot${BotToken}/sendMessage" -Method Post -Body @{
             chat_id = $ChatId
             text = $Message
           }
