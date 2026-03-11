@@ -24,7 +24,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Module\HUDI.CoreX.Module.Master\HUDI.CoreX.Module.Master.csproj" />
     <ProjectReference Include="..\HUDI.CoreX.Core\HUDI.CoreX.Core.csproj" />
   </ItemGroup>
 </Project>

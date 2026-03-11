@@ -20,8 +20,8 @@ namespace HUDI.CoreX
          typeof(CoreXApplicationModule),
          typeof(CoreXEntityFrameworkModule),
          typeof(AbpAspNetCoreModule),
-         typeof(AbpAspNetCoreSignalRModule),
-         typeof(CoreXMasterModule)
+         typeof(AbpAspNetCoreSignalRModule)
+         //typeof(CoreXMasterModule)
      )]
     public class CoreXWebCoreModule : AbpModule
     {
@@ -48,10 +48,10 @@ namespace HUDI.CoreX
                      typeof(CoreXApplicationModule).GetAssembly()
                  );
 
-            Configuration.Modules.AbpAspNetCore()
-                 .CreateControllersForAppServices(
-                     typeof(CoreXMasterModule).GetAssembly()
-                 );
+            //Configuration.Modules.AbpAspNetCore()
+            //     .CreateControllersForAppServices(
+            //         typeof(CoreXMasterModule).GetAssembly()
+            //     );
 
             ConfigureTokenAuth();
         }
