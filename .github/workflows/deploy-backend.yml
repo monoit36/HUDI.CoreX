@@ -14,13 +14,13 @@ jobs:
       # ==========================================
       # 1. NOTIFY DEPLOYMENT START
       # ==========================================
-      - name: 🚀 Telegram Notification (Start)
+      - name: Telegram Notification (Start)
         run: |
           $Message = @"
-          ⏳ BACKEND DEPLOYMENT STARTED...
-          👤 Pushed by: ${{ github.actor }}
-          🌿 Branch: ${{ github.ref_name }}
-          📝 Commit message: ${{ github.event.head_commit.message }}
+          BACKEND DEPLOYMENT STARTED...
+          Pushed by: ${{ github.actor }}
+          Branch: ${{ github.ref_name }}
+          Commit message: ${{ github.event.head_commit.message }}
           "@
           
           # URL Encode message
@@ -53,19 +53,20 @@ jobs:
       # ==========================================
       # 3. NOTIFY DEPLOYMENT END
       # ==========================================
-      - name: 🏁 Telegram Notification (End)
+      - name: Telegram Notification (End)
         if: always() # CRITICAL: Ensure notification is sent even if the Build step fails
         run: |
           if ('${{ job.status }}' -eq 'success') {
-            $StatusText = '✅ SUCCESS'
+            $StatusText = 'SUCCESS'
           } else {
-            $StatusText = '❌ FAILED'
+            $StatusText = 'FAILED'
           }
           
+          $RunUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           $Message = @"
           Backend Deployment Status: $StatusText
-          🖥️ Repository: ${{ github.repository }}
-          🔗 View detailed logs in the Actions tab on GitHub.
+          Repository: ${{ github.repository }}
+          Action Log: $RunUrl
           "@
           
           $BotToken = '${{ secrets.TELEGRAM_BOT_TOKEN }}'
