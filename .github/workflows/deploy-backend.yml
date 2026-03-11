@@ -1,0 +1,52 @@
+name: Deploy Backend Only
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'aspnet-core/**'
+      - 'docker-compose.yml'
+
+jobs:
+  deploy-backend:
+    runs-on: self-hosted 
+    steps:
+      # ==========================================
+      # 1. THÔNG BÁO BẮT ĐẦU DEPLOY
+      # ==========================================
+      - name: 🚀 Thông báo Telegram (Bắt đầu)
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ⏳ TIẾN TRÌNH DEPLOY BACKEND BẮT ĐẦU...
+            👤 Người push code: ${{ github.actor }}
+            🌿 Nhánh: ${{ github.ref_name }}
+            📝 Nội dung commit: ${{ github.event.head_commit.message }}
+
+      # ==========================================
+      # 2. CÁC BƯỚC THỰC THI CHÍNH
+      # ==========================================
+      - name: Kéo code mới nhất từ GitHub
+        uses: actions/checkout@v4
+
+      - name: Build và chạy ứng dụng bằng Docker Compose
+        run: docker-compose up -d --build api db redis
+        
+      - name: Dọn dẹp Image rác
+        run: docker image prune -f
+
+      # ==========================================
+      # 3. THÔNG BÁO KẾT THÚC DEPLOY
+      # ==========================================
+      - name: 🏁 Thông báo Telegram (Kết thúc)
+        uses: appleboy/telegram-action@master
+        if: always() # Dòng này CỰC KỲ QUAN TRỌNG: Đảm bảo luôn gửi tin nhắn dù bước Build ở trên có bị lỗi hay thành công
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Trạng thái Deploy Backend: ${{ job.status == 'success' && '✅ THÀNH CÔNG' || '❌ THẤT BẠI' }}
+            🖥️ Repository: ${{ github.repository }}
+            🔗 Xem chi tiết log tại tab Actions trên GitHub.
