@@ -30,7 +30,7 @@ services:
       Authentication__JwtBearer__Issuer: "${JWT_ISSUER:-CoreX}"
       Authentication__JwtBearer__Audience: "${JWT_AUDIENCE:-CoreX}"
 
-      # Telegram config
+      # Telegram
       Telegram__BotToken: "${TELEGRAM_BOT_TOKEN:-}"
       Telegram__ChatId: "${TELEGRAM_CHAT_ID:-}"
       Telegram__IsEnabled: "${TELEGRAM_IS_ENABLED:-false}"
