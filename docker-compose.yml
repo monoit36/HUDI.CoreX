@@ -5,7 +5,7 @@ services:
       context: ./aspnet-core    # Docker sẽ vào thư mục này để lấy mã nguồn C#
       dockerfile: Dockerfile
     container_name: corex-api
-    restart: always
+    restart: unless-stopped
     ports:
       - "5000:80"
     environment:
