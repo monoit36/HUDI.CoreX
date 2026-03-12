@@ -1,0 +1,22 @@
+using System.ComponentModel.DataAnnotations;
+using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using HUDI.CoreX.DemoProducts;
+
+namespace HUDI.CoreX.DemoProducts.Dto
+{
+    [AutoMapFrom(typeof(DemoProduct))]
+    [AutoMapTo(typeof(DemoProduct))]
+    public class DemoProductDto : EntityDto<int>
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public string Category { get; set; }
+        public int Quantity { get; set; }
+        public string InventoryStatus { get; set; }
+        public int Rating { get; set; }
+        public string Image { get; set; }
+    }
+}

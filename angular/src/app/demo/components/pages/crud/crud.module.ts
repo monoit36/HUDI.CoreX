@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CrudRoutingModule } from './crud-routing.module';
 import { CrudComponent } from './crud.component';
+import { DemoProductServiceProxy } from '@shared/service-proxies/service-proxies';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -35,6 +36,9 @@ import { DialogModule } from 'primeng/dialog';
         RadioButtonModule,
         InputNumberModule,
         DialogModule
+    ],
+    providers: [
+        DemoProductServiceProxy
     ],
     declarations: [CrudComponent]
 })

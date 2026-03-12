@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from 'src/app/demo/api/product';
+import { DemoProductDto, DemoProductServiceProxy, CreateDemoProductDto, UpdateDemoProductDto } from '@shared/service-proxies/service-proxies';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/demo/service/product.service';
 
 @Component({
     templateUrl: './crud.component.html',
@@ -16,11 +15,11 @@ export class CrudComponent implements OnInit {
 
     deleteProductsDialog: boolean = false;
 
-    products: Product[] = [];
+    products: DemoProductDto[] = [];
 
-    product: Product = {};
+    product: any = {}; // Use any here temporarily to handle form data and validation
 
-    selectedProducts: Product[] = [];
+    selectedProducts: DemoProductDto[] = [];
 
     submitted: boolean = false;
 
@@ -30,13 +29,14 @@ export class CrudComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private productService: ProductService, private messageService: MessageService) { }
+    constructor(private demoProductService: DemoProductServiceProxy, private messageService: MessageService) { }
 
     ngOnInit() {
-        this.productService.getProducts().then(data => this.products = data);
+        this.loadProducts();
 
         this.cols = [
-            { field: 'product', header: 'Product' },
+            { field: 'code', header: 'Code' },
+            { field: 'name', header: 'Name' },
             { field: 'price', header: 'Price' },
             { field: 'category', header: 'Category' },
             { field: 'rating', header: 'Reviews' },
@@ -44,10 +44,16 @@ export class CrudComponent implements OnInit {
         ];
 
         this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
+            { label: 'INSTOCK', value: 'INSTOCK' },
+            { label: 'LOWSTOCK', value: 'LOWSTOCK' },
+            { label: 'OUTOFSTOCK', value: 'OUTOFSTOCK' }
         ];
+    }
+
+    loadProducts() {
+        this.demoProductService.getAll('', 0, 1000).subscribe(result => {
+            this.products = result.items || [];
+        });
     }
 
     openNew() {
@@ -60,26 +66,41 @@ export class CrudComponent implements OnInit {
         this.deleteProductsDialog = true;
     }
 
-    editProduct(product: Product) {
+    editProduct(product: any) {
         this.product = { ...product };
         this.productDialog = true;
     }
 
-    deleteProduct(product: Product) {
+    deleteProduct(product: any) {
         this.deleteProductDialog = true;
         this.product = { ...product };
     }
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
+        
+        let idsToDelete = this.selectedProducts.map(p => p.id);
+        
+        // Optionally create a loop to delete them via service, then reload:
+        idsToDelete.forEach(id => {
+            if (id !== undefined) {
+                 this.demoProductService.delete(id).subscribe(() => {
+                     this.loadProducts();
+                 });
+            }
+        });
+
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
         this.selectedProducts = [];
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.products = this.products.filter(val => val.id !== this.product.id);
+        if (this.product.id) {
+             this.demoProductService.delete(this.product.id).subscribe(() => {
+                 this.loadProducts();
+             });
+        }
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
         this.product = {};
     }
@@ -94,27 +115,29 @@ export class CrudComponent implements OnInit {
 
         if (this.product.name?.trim()) {
             if (this.product.id) {
-                // @ts-ignore
-                this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-                this.products[this.findIndexById(this.product.id)] = this.product;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                // Update
+                let updateDto = new UpdateDemoProductDto();
+                updateDto.init(this.product);
+                this.demoProductService.update(updateDto).subscribe(() => {
+                     this.loadProducts();
+                     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                });
             } else {
-                this.product.id = this.createId();
-                this.product.code = this.createId();
-                this.product.image = 'product-placeholder.svg';
-                // @ts-ignore
-                this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-                this.products.push(this.product);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                // Create
+                let createDto = new CreateDemoProductDto();
+                createDto.init(this.product);
+                this.demoProductService.create(createDto).subscribe(() => {
+                     this.loadProducts();
+                     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                });
             }
 
-            this.products = [...this.products];
             this.productDialog = false;
             this.product = {};
         }
     }
 
-    findIndexById(id: string): number {
+    findIndexById(id: number): number {
         let index = -1;
         for (let i = 0; i < this.products.length; i++) {
             if (this.products[i].id === id) {
