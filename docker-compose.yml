@@ -21,8 +21,8 @@ services:
 
       # App 
       App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-http://localhost:5000/}"
-      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4200/}"
-      App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:3000}"
+      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4300/}"
+      App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:4300,http://localhost:3000}"
 
       # JWT
       Authentication__JwtBearer__IsEnabled: "true"
@@ -42,6 +42,20 @@ services:
       timeout: 10s
       retries: 5
       start_period: 20s
+    networks:
+      - corex-net
+
+  corex-frontend:
+    image: hudi-corex-angular:latest
+    build:
+      context: ./angular
+      dockerfile: Dockerfile
+    container_name: corex-frontend
+    restart: unless-stopped
+    ports:
+      - "4300:80"
+    depends_on:
+      - corex-api
     networks:
       - corex-net
 
