@@ -10,19 +10,23 @@ namespace HUDI.CoreX.Module.Master
 {
     public class MasterConnectionStringResolver : DefaultConnectionStringResolver
     {
-        public MasterConnectionStringResolver(IAbpStartupConfiguration configuration)
+        private readonly IConfiguration _appConfiguration;
+
+        public MasterConnectionStringResolver(
+            IAbpStartupConfiguration configuration,
+            IConfiguration appConfiguration)
             : base(configuration)
         {
+            _appConfiguration = appConfiguration;
         }
 
         public override string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
-
-            var configuration = AppConfigurations.Get(WebContentDirectoryFinder.CalculateContentRootFolder());
             if (args["DbContextConcreteType"] is System.Type dbContextType &&
                 dbContextType == typeof(MasterDbContext))
             {
-                return configuration.GetConnectionString(MasterConsts.ConnectionStringName);
+                return _appConfiguration.GetConnectionString(MasterConsts.ConnectionStringName) 
+                       ?? _appConfiguration[MasterConsts.ConnectionStringName];
             }
 
             return base.GetNameOrConnectionString(args);
