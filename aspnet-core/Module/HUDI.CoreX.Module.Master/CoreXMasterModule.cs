@@ -1,5 +1,4 @@
 using Abp.AutoMapper;
-using Abp.AutoMapper;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
