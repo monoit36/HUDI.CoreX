@@ -137,5 +137,14 @@
     <text name="Details">Chi tiết</text>
     <text name="CreateMasterData">Tạo dữ liệu danh mục</text>
     <text name="EditMasterData">Sửa dữ liệu danh mục</text>
+    <!-- Sites -->
+    <text name="Sites">Cơ sở / Điểm bán</text>
+    <text name="Site">Cơ sở</text>
+    <text name="CreateNewSite">Tạo cơ sở mới</text>
+    <text name="EditSite">Sửa cơ sở</text>
+    <text name="SiteDeleteWarningMessage">Cơ sở {0} sẽ bị xóa.</text>
+    <text name="Status">Tình trạng</text>
+    <text name="SourceSystem">Hệ thống nguồn</text>
+    <text name="ExternalId">Mã ngoại lai (External ID)</text>
   </texts>
 </localizationDictionary>

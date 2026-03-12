@@ -1,0 +1,102 @@
+<p-dialog [(visible)]="visible" [style]="{width: '600px', 'max-height': '90vh'}" [header]="'EditSite' | localize" [modal]="true" (onHide)="hide()">
+  <ng-template pTemplate="content">
+    <form autocomplete="off" #editSiteModal="ngForm" id="editSiteForm" class="p-fluid">
+
+      <!-- Code -->
+      <div class="field mt-3">
+        <label for="code" class="font-medium text-900">{{ "Code" | localize }} <span class="text-red-500">*</span></label>
+        <input
+          pInputText
+          type="text"
+          name="code"
+          id="code"
+          maxlength="50"
+          required
+          [(ngModel)]="site.code"
+          #codeModel="ngModel"
+          #codeEl
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': codeModel.invalid && (codeModel.dirty || codeModel.touched)}"
+        />
+        <abp-validation-summary [control]="codeModel" [controlEl]="codeEl"></abp-validation-summary>
+      </div>
+
+      <!-- Name -->
+      <div class="field">
+        <label for="name" class="font-medium text-900">{{ "Name" | localize }} <span class="text-red-500">*</span></label>
+        <input
+          pInputText
+          type="text"
+          name="name"
+          id="name"
+          maxlength="255"
+          required
+          [(ngModel)]="site.name"
+          #nameModel="ngModel"
+          #nameEl
+          class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': nameModel.invalid && (nameModel.dirty || nameModel.touched)}"
+        />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+
+      <!-- Status -->
+      <div class="field">
+        <label for="status" class="font-medium text-900">{{ "Status" | localize }}</label>
+        <input
+          pInputText
+          type="text"
+          name="status"
+          id="status"
+          maxlength="50"
+          [(ngModel)]="site.status"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Source System -->
+      <div class="field">
+        <label for="sourceSystem" class="font-medium text-900">{{ "SourceSystem" | localize }}</label>
+        <input
+          pInputText
+          type="text"
+          name="sourceSystem"
+          id="sourceSystem"
+          maxlength="100"
+          [(ngModel)]="site.sourceSystem"
+          class="w-full"
+        />
+      </div>
+
+      <!-- External ID -->
+      <div class="field">
+        <label for="externalId" class="font-medium text-900">{{ "ExternalId" | localize }}</label>
+        <input
+          pInputText
+          type="text"
+          name="externalId"
+          id="externalId"
+          maxlength="100"
+          [(ngModel)]="site.externalId"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Is Active -->
+      <div class="field-checkbox mt-2">
+        <p-checkbox
+          name="isActive"
+          [(ngModel)]="site.isActive"
+          [binary]="true"
+          inputId="isActive"
+        ></p-checkbox>
+        <label for="isActive">{{ "IsActive" | localize }}</label>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple [label]="'Cancel' | localize" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="hide()" [disabled]="saving"></button>
+    <button pButton pRipple [label]="'Save' | localize" icon="pi pi-check" (click)="save()" [disabled]="editSiteModal && !editSiteModal.valid || saving" [loading]="saving"></button>
+  </ng-template>
+</p-dialog>

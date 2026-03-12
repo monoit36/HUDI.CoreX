@@ -19,6 +19,11 @@ namespace HUDI.CoreX.Authorization
             users.CreateChildPermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
 
             admin.CreateChildPermission(PermissionNames.Pages_Roles, L("Roles"));
+
+            var sites = admin.CreateChildPermission(PermissionNames.Pages_Sites, L("Sites"));
+            sites.CreateChildPermission(PermissionNames.Pages_Sites_Create, L("CreateNewSite"));
+            sites.CreateChildPermission(PermissionNames.Pages_Sites_Edit, L("EditSite"));
+            sites.CreateChildPermission(PermissionNames.Pages_Sites_Delete, L("DeleteSite"));
         }
 
         private static ILocalizableString L(string name)

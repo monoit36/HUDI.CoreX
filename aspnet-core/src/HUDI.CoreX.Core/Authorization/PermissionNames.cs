@@ -13,5 +13,10 @@ namespace HUDI.CoreX.Authorization
         public const string Pages_Users_Activation = "Pages.Administration.Users.Activation";
 
         public const string Pages_Roles = "Pages.Administration.Roles";
+
+        public const string Pages_Sites = "Pages.Administration.Sites";
+        public const string Pages_Sites_Create = "Pages.Administration.Sites.Create";
+        public const string Pages_Sites_Edit = "Pages.Administration.Sites.Edit";
+        public const string Pages_Sites_Delete = "Pages.Administration.Sites.Delete";
     }
 }

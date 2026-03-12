@@ -137,5 +137,14 @@
     <text name="Details">Details</text>
     <text name="CreateMasterData">Create Master Data</text>
     <text name="EditMasterData">Edit Master Data</text>
+    <!-- Sites -->
+    <text name="Sites">Sites</text>
+    <text name="Site">Site</text>
+    <text name="CreateNewSite">Create new site</text>
+    <text name="EditSite">Edit site</text>
+    <text name="SiteDeleteWarningMessage">Site {0} will be deleted.</text>
+    <text name="Status">Status</text>
+    <text name="SourceSystem">Source System</text>
+    <text name="ExternalId">External ID</text>
   </texts>
 </localizationDictionary>

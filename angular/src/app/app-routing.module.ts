@@ -39,6 +39,12 @@ import { AppLayoutComponent } from './layout/app.layout.component';
                         canActivate: [AppRouteGuard]
                     },
                     {
+                        path: 'sites',
+                        loadChildren: () => import('./administration/sites/sites.module').then((m) => m.SitesModule),
+                        data: { permission: 'Pages.Administration.Sites' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
                         path: 'master-data',
                         loadChildren: () => import('./master-data/Dictionary/master-data.module').then((m) => m.MasterDataModule),
                         data: { permission: 'Pages.MasterData' },

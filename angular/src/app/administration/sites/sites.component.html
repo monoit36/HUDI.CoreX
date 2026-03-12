@@ -1,0 +1,138 @@
+<div [@routerTransition]>
+  <div class="grid">
+    <div class="col-12">
+      <div class="card px-5 py-5">
+
+        <!-- Header: Title + Create button -->
+        <div
+          class="flex flex-column sm:flex-row justify-content-between align-items-start sm:align-items-center mb-4 gap-3">
+          <div>
+            <h4 class="m-0 text-900 font-bold mb-1">{{ "Sites" | localize }}</h4>
+            <span class="text-500 text-sm block">{{ "TotalRecordsCount" | localize: totalItems }}</span>
+          </div>
+          <div class="flex flex-column sm:flex-row align-items-center gap-3 w-full sm:w-auto">
+            <span
+              class="inline-flex align-items-center gap-2 px-3 py-2 border-round-3xl border-1 surface-border bg-white w-full sm:w-auto justify-content-center">
+              <span class="w-1rem h-1rem border-circle bg-orange-500"></span>
+              <span class="font-medium text-700 text-sm">{{ totalItems }} Active Sites</span>
+            </span>
+            <button pButton pRipple icon="pi pi-plus" [label]="'CreateNewSite' | localize"
+              class="p-button-success w-full sm:w-auto" (click)="createSite()"></button>
+          </div>
+        </div>
+
+        <!-- Control bar: Search + Filter + Refresh + Pagination -->
+        <div
+          class="flex flex-column sm:flex-row align-items-center justify-content-between mb-4 pb-4 border-bottom-1 surface-border gap-3">
+          <div class="w-full sm:w-auto">
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)"
+                [placeholder]="'Search' | localize" class="w-full sm:w-16rem" />
+            </span>
+          </div>
+          <div class="flex align-items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+            <p-button icon="pi pi-filter" [outlined]="true" severity="secondary"
+              (onClick)="advancedFiltersVisible = !advancedFiltersVisible" pTooltip="Filter"
+              tooltipPosition="bottom"></p-button>
+
+            <div class="mx-2 border-left-1 surface-border" style="height: 1.5rem"></div>
+
+            <p-button icon="pi pi-refresh" [outlined]="true" severity="secondary" (onClick)="refresh()"
+              pTooltip="Refresh" tooltipPosition="bottom"></p-button>
+
+            <span
+              class="text-700 text-sm white-space-nowrap border-1 surface-border border-round px-3 font-medium flex align-items-center justify-content-center align-self-stretch">
+              {{ pageNumber }} of {{ totalPages }}
+            </span>
+
+            <p-button icon="pi pi-chevron-left" [outlined]="true" severity="secondary" [disabled]="pageNumber <= 1"
+              (onClick)="getDataPage(pageNumber - 1)"></p-button>
+            <p-button icon="pi pi-chevron-right" [outlined]="true" severity="secondary"
+              [disabled]="pageNumber >= totalPages" (onClick)="getDataPage(pageNumber + 1)"></p-button>
+          </div>
+        </div>
+
+        <!-- Advanced Filters -->
+        @if (advancedFiltersVisible) {
+        <div class="flex align-items-center flex-wrap gap-3 pb-3 mb-3 border-bottom-1 surface-border">
+          <label class="font-medium text-900">{{ "IsActive" | localize }}:</label>
+          <div class="flex align-items-center gap-2">
+            <p-radioButton name="isActive" [value]="undefined" [(ngModel)]="isActive"
+              inputId="isActiveAll"></p-radioButton>
+            <label for="isActiveAll" class="mr-2">{{ "All" | localize }}</label>
+
+            <p-radioButton name="isActive" [value]="true" [(ngModel)]="isActive"
+              inputId="isActiveActive"></p-radioButton>
+            <label for="isActiveActive" class="mr-2">{{ "Yes" | localize }}</label>
+
+            <p-radioButton name="isActive" [value]="false" [(ngModel)]="isActive"
+              inputId="isActivePassive"></p-radioButton>
+            <label for="isActivePassive" class="mr-2">{{ "No" | localize }}</label>
+          </div>
+          <p-button [label]="'Search' | localize" icon="pi pi-search" size="small"
+            (onClick)="getDataPage(1)"></p-button>
+          <p-button [label]="'Clear' | localize" severity="secondary" [text]="true" size="small"
+            (onClick)="clearFilters()"></p-button>
+        </div>
+        }
+
+        <!-- Table -->
+        <p-table [value]="sites | paginate: {
+            id: 'server',
+            itemsPerPage: pageSize,
+            currentPage: pageNumber,
+            totalItems: totalItems
+          }" responsiveLayout="scroll" [rows]="pageSize" [rowHover]="true" dataKey="id" [loading]="isTableLoading"
+          [(selection)]="selectedSites" selectionMode="multiple" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="code">{{ "Code" | localize }} <p-sortIcon field="code"></p-sortIcon></th>
+              <th pSortableColumn="name">{{ "Name" | localize }} <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="status">{{ "Status" | localize }} <p-sortIcon field="status"></p-sortIcon></th>
+              <th pSortableColumn="isActive" style="width: 8rem">{{ "IsActive" | localize }} <p-sortIcon field="isActive"></p-sortIcon></th>
+              <th style="width: 4rem"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-site>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="site"></p-tableCheckbox>
+              </td>
+              <td>
+                <span class="font-medium text-900">{{ site.code }}</span>
+              </td>
+              <td>{{ site.name }}</td>
+              <td>{{ site.status }}</td>
+              <td>
+                <p-tag [value]="site.isActive ? ('Yes' | localize) : ('No' | localize)"
+                  [severity]="site.isActive ? 'success' : 'danger'"></p-tag>
+              </td>
+              <td class="text-center">
+                <p-button icon="pi pi-ellipsis-h" [text]="true" severity="secondary"
+                  (onClick)="toggleActionMenu($event, site)"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center p-5">
+                <i class="pi pi-building text-400" style="font-size: 2rem;"></i>
+                <p class="mt-2 text-500">{{ "NoData" | localize }}</p>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </div>
+    </div>
+  </div>
+
+  <p-menu #actionMenu [model]="actionMenuItems" [popup]="true" appendTo="body"></p-menu>
+
+  <app-create-site-dialog #createSiteDialog (onSave)="refresh()"></app-create-site-dialog>
+  <app-edit-site-dialog #editSiteDialog (onSave)="refresh()"></app-edit-site-dialog>
+</div>

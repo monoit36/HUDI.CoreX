@@ -34,6 +34,12 @@ export class AppMenuComponent extends AppComponentBase implements OnInit {
                         visible: this.permission.isGranted('Pages.Administration.Tenants')
                     },
                     {
+                        label: this.l('Sites'),
+                        icon: 'pi pi-fw pi-globe',
+                        routerLink: ['/app/sites'],
+                        visible: this.permission.isGranted('Pages.Administration.Sites')
+                    },
+                    {
                         label: this.l('Users'),
                         icon: 'pi pi-fw pi-users',
                         routerLink: ['/app/users'],
