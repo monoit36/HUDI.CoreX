@@ -12,9 +12,6 @@ namespace HUDI.CoreX.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "MasterDataDictionaries");
-
             migrationBuilder.CreateTable(
                 name: "AppDemoProducts",
                 columns: table => new
