@@ -22,7 +22,7 @@ services:
       # App 
       App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-http://localhost:5000/}"
       App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4300/}"
-      App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:4300,http://localhost:3000}"
+      App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:4300,http://localhost:3000,http://host.docker.internal:4300,https://api.hudicorex.me,https://hudicorex.me}"
 
       # JWT
       Authentication__JwtBearer__IsEnabled: "true"
@@ -56,6 +56,19 @@ services:
       - "4300:80"
     depends_on:
       - corex-api
+    networks:
+      - corex-net
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "web1:host-gateway"
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiZWE3MTgyNWI3ZjYyZmQwZWEyNzk2OWZlMDgxMTJhOGIiLCJ0IjoiZDY1NWQ4ZjktNjJkNi00OTJkLTg3MDQtMDY4MmI4YjA1ZjNiIiwicyI6Ik9EZ3lPVEEyT0dNdE5EWTROUzAwTlRSa0xUazBPV1l0T0RSbU56Y3dZMkpsTW1FNCJ9
     networks:
       - corex-net
 
