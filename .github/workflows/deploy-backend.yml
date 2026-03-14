@@ -17,7 +17,7 @@ jobs:
       - name: Telegram Notification (Start)
         run: |
           $Message = @"
-          BACKEND DEPLOYMENT STARTED...
+          DEPLOYMENT STARTED...
           Pushed by: ${{ github.actor }}
           Branch: ${{ github.ref_name }}
           Commit message: ${{ github.event.head_commit.message }}
