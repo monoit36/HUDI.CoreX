@@ -15,7 +15,7 @@ services:
       DOTNET_RUNNING_IN_CONTAINER: "true"
       TZ: Asia/Ho_Chi_Minh
 
-      # Connection strings � override appsettings.json at runtime
+      # Connection strings  override appsettings.json at runtime ok
       ConnectionStrings__Default: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
       ConnectionStrings__Master: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
 
