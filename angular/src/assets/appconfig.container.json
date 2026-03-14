@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "https://api.hudicorex.me",
-  "appBaseUrl": "https://hudicorex.me",
+  "remoteServiceBaseUrl": "http://localhost:5000",
+  "appBaseUrl": "http://localhost:4300",
   "localeMappings": [
     {
       "from": "pt-BR",
