@@ -1,6 +1,8 @@
 services:
   corex-api:
     image: hudi-corex:latest
+    env_file:
+      - .env  # Docker sẽ đọc file này và nạp vào container lúc khởi chạy
     build:
       context: ./aspnet-core    # Docker sẽ vào thư mục này để lấy mã nguồn C#
       dockerfile: Dockerfile
@@ -10,18 +12,18 @@ services:
       - "5000:80"
     environment:
       # ASP.NET Core
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
       DOTNET_RUNNING_IN_CONTAINER: "true"
       TZ: Asia/Ho_Chi_Minh
 
-      # Connection strings  override appsettings.json at runtime ok
+      # Connection strings  override appsettings.json at runtime
       ConnectionStrings__Default: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
       ConnectionStrings__Master: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
 
       # App 
-      App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-https://api.hudicorex.me/}"
-      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-https://hudicorex.me/}"
+      App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-http://localhost:5000/}"
+      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4300/}"
       App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:4300,http://localhost:3000,http://host.docker.internal:4300,https://api.hudicorex.me,https://hudicorex.me}"
 
       # JWT
