@@ -20,8 +20,8 @@ services:
       ConnectionStrings__Master: "Host=${DB_HOST:-db-host};Port=${DB_PORT:-5432};Database=${DB_NAME:-CoreX};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-123456};"
 
       # App 
-      App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-http://localhost:5000/}"
-      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-http://localhost:4300/}"
+      App__ServerRootAddress: "${SERVER_ROOT_ADDRESS:-https://api.hudicorex.me/}"
+      App__ClientRootAddress: "${CLIENT_ROOT_ADDRESS:-https://hudicorex.me/}"
       App__CorsOrigins: "${CORS_ORIGINS:-http://localhost:4200,http://localhost:4300,http://localhost:3000,http://host.docker.internal:4300,https://api.hudicorex.me,https://hudicorex.me}"
 
       # JWT
